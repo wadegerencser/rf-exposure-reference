@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RF Exposure Engineering Reference</title>
+<style>
+:root{
+  --ink:#12202b; --ink2:#3d5566; --paper:#fbfaf7; --card:#ffffff;
+  --line:#dfe4e8;
+  --sky1:#1d4e6f; --sky2:#2b7fa8; --sun:#e08b3c; --sunwarm:#f2b463;
+  --green:#2e7d5b; --amber:#c9871f; --red:#c0392b; --violet:#5b4b8a;
+  --teal:#187f8a;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+a{color:var(--sky2)}
+code,.mono{font-family:var(--mono);font-size:.92em}
+
+/* ---------- cover ---------- */
+.cover{
+  position:relative; padding:64px 48px 52px; color:#fff; overflow:hidden;
+  background:linear-gradient(160deg,#0f3350 0%,var(--sky1) 38%,var(--sky2) 78%,#3d9ab8 100%);
+}
+.cover:after{
+  content:""; position:absolute; right:-140px; top:-120px; width:520px; height:520px;
+  border-radius:50%; background:radial-gradient(circle,rgba(242,180,99,.55),rgba(224,139,60,0) 68%);
+}
+.cover h1{margin:0 0 6px; font-size:44px; line-height:1.08; letter-spacing:-.5px}
+.cover .sub{font-size:20px; opacity:.95; max-width:760px; margin:0 0 22px}
+.kicker{
+  display:inline-block; font:600 12px/1 var(--mono); letter-spacing:.18em;
+  text-transform:uppercase; background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.35); padding:7px 12px; border-radius:999px; margin-bottom:20px;
+}
+.covergrid{display:flex; flex-wrap:wrap; gap:12px; position:relative; z-index:2}
+.cchip{
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.28);
+  border-radius:10px; padding:10px 14px; min-width:150px;
+}
+.cchip b{display:block; font-size:22px; font-family:var(--mono)}
+.cchip span{font-size:12px; opacity:.88}
+
+/* ---------- nav ---------- */
+nav{
+  position:sticky; top:0; z-index:50; background:rgba(251,250,247,.96);
+  backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:6px; padding:10px 16px;
+}
+nav button{
+  font:600 13px/1 inherit; color:var(--ink2); background:#fff;
+  border:1px solid var(--line); border-radius:999px; padding:9px 14px; cursor:pointer;
+}
+nav button:hover{border-color:var(--sky2); color:var(--sky1)}
+nav button.on{background:var(--sky1); border-color:var(--sky1); color:#fff}
+
+main{max-width:1120px; margin:0 auto; padding:34px 20px 90px}
+section{display:none}
+section.on{display:block}
+h2{
+  font-size:30px; margin:6px 0 4px; letter-spacing:-.3px;
+  border-left:6px solid var(--sun); padding-left:14px;
+}
+h2 .n{font-family:var(--mono); color:var(--sun); font-size:16px; display:block; letter-spacing:.14em}
+h3{font-size:20px; margin:30px 0 8px; color:var(--sky1)}
+h4{font-size:16px; margin:20px 0 6px; color:var(--ink2); text-transform:uppercase; letter-spacing:.08em; font-family:var(--mono)}
+p{margin:10px 0}
+ul,ol{margin:10px 0 10px 22px}
+li{margin:5px 0}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin:18px 0;
+  box-shadow:0 1px 2px rgba(18,32,43,.05)}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.note{border-left:5px solid var(--teal); background:#eef8f9; border-radius:0 10px 10px 0; padding:14px 18px; margin:16px 0}
+.warn{border-left:5px solid var(--amber); background:#fdf6e8; border-radius:0 10px 10px 0; padding:14px 18px; margin:16px 0}
+.key{border-left:5px solid var(--violet); background:#f2f0f8; border-radius:0 10px 10px 0; padding:14px 18px; margin:16px 0}
+
+table{border-collapse:collapse; width:100%; font-size:14px; margin:12px 0}
+th,td{border-bottom:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:#eef2f5; color:var(--sky1); font-size:12px; text-transform:uppercase; letter-spacing:.06em}
+tbody tr:nth-child(even){background:#fafbfc}
+td.num,th.num{font-family:var(--mono); text-align:right}
+.tag{display:inline-block; font:600 11px/1 var(--mono); padding:4px 7px; border-radius:6px; letter-spacing:.04em}
+.t-sar{background:#f7e6e3; color:var(--red)}
+.t-mpe{background:#e4eef6; color:var(--sky1)}
+.t-ex{background:#e8f1ea; color:var(--green)}
+
+/* ---------- calculator ---------- */
+.calc{background:linear-gradient(150deg,#12354e,#1d5b7c); color:#fff; border-radius:16px; padding:24px; margin:20px 0}
+.calc h3{color:#ffd9a8; margin-top:0}
+.calc label{display:block; font:600 12px/1.4 var(--mono); letter-spacing:.08em; opacity:.9; margin-bottom:4px}
+.calc .row{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+@media(max-width:820px){.calc .row{grid-template-columns:1fr 1fr}}
+.calc input[type=range]{width:100%; accent-color:var(--sunwarm)}
+.calc .val{font-family:var(--mono); font-size:17px; color:#ffd9a8}
+.calc select{width:100%; padding:6px; border-radius:8px; border:1px solid rgba(255,255,255,.3); background:#0f2c40; color:#fff; font-family:var(--mono)}
+.readout{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px}
+@media(max-width:820px){.readout{grid-template-columns:1fr}}
+.ro{background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:14px}
+.ro b{display:block; font-family:var(--mono); font-size:26px; color:#fff}
+.ro span{font-size:12px; opacity:.85; letter-spacing:.06em; text-transform:uppercase}
+.meter{height:18px; border-radius:9px; background:rgba(0,0,0,.28); overflow:hidden; margin-top:14px}
+.meter i{display:block; height:100%; width:2%; border-radius:9px; transition:width .18s ease, background .18s ease}
+.badge{display:inline-block; margin-top:12px; font:700 13px/1 var(--mono); padding:9px 13px; border-radius:8px; letter-spacing:.06em}
+
+canvas{max-width:100%}
+.chartwrap{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; margin:16px 0}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-size:12px; font-family:var(--mono); margin-top:8px; color:var(--ink2)}
+.legend i{display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:5px; vertical-align:-1px}
+
+#q{width:100%; padding:11px 14px; font-size:15px; border:1px solid var(--line); border-radius:10px; font-family:var(--mono)}
+
+.myth{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:14px 0; background:#fff}
+.myth .m{background:#fbeeec; padding:12px 16px; font-weight:700; color:var(--red)}
+.myth .r{padding:14px 16px}
+.myth .r b{color:var(--green)}
+
+footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; color:var(--ink2); font-size:13px}
+
+/* ---------- print ---------- */
+@media print{
+  @page{size:Letter; margin:14mm}
+  nav,#printbtn{display:none !important}
+  body{background:#fff; font-size:11pt}
+  section{display:block !important; break-before:page; page-break-before:always}
+  section:first-of-type{break-before:auto; page-break-before:auto}
+  .card,.note,.warn,.key,.myth,.chartwrap,table{break-inside:avoid; page-break-inside:avoid;
+    box-shadow:none}
+  .cover{padding:40px 30px; break-after:page; page-break-after:always}
+  h2{break-after:avoid; break-inside:avoid}
+  h3,h4{break-after:avoid}
+  .calc{color:#fff}
+  a{color:var(--sky1); text-decoration:none}
+  h2{break-after:avoid}
+  .print-only{display:block}
+}
+.print-only{display:none}
+#printbtn{position:fixed; right:18px; bottom:18px; z-index:99; background:var(--sun); color:#fff;
+  border:0; border-radius:999px; padding:13px 20px; font:700 14px/1 inherit; cursor:pointer;
+  box-shadow:0 6px 18px rgba(224,139,60,.45)}
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="kicker">Engineering Reference &middot; Edition 1.1</div>
+  <h1>RF Exposure:<br>Why the Numbers Matter</h1>
+  <p class="sub">This is a reference on SAR, MPE, EIRP, duty cycle, and separation distance. It was
+  put together by someone who worked around a tactical jamming aircraft in the Marine Corps and then
+  spent a career designing Wi-Fi. RF exposure covers a range of about ten orders of magnitude. When
+  all of it gets called "radiation" and treated as one thing, the conclusions come out wrong in both
+  directions.</p>
+  <div class="covergrid">
+    <div class="cchip"><b>1.6 W/kg</b><span>FCC SAR limit, 1 g tissue</span></div>
+    <div class="cchip"><b>1.0 mW/cm&sup2;</b><span>FCC general population MPE</span></div>
+    <div class="cchip"><b>20 cm</b><span>Mobile vs portable boundary</span></div>
+    <div class="cchip"><b>10<sup>10</sup></b><span>Range between a jammer and a ceiling AP</span></div>
+  </div>
+</header>
+
+<nav id="nav"></nav>
+
+<main>
+
+<!-- ===================== PART 1 ===================== -->
+<section id="s1" class="on">
+  <h2><span class="n">Part 1</span>Executive Summary</h2>
+
+  <div class="card" style="border-top:5px solid var(--sun)">
+    <h4 style="color:var(--sun);margin-top:0">Why this document exists</h4>
+    <p>I did not get into RF through Wi-Fi. I got into it through the United States Marine Corps,
+    working on the EA-6B Prowler. The Prowler was a tactical electronic countermeasures aircraft, and
+    the whole point of it was putting out high power radio frequency energy on purpose. It carried
+    external jamming pods that were driven by ram air turbines, and the mission was to put enough RF
+    into a radar environment to blind it. Being on a flight line around that aircraft is not the same
+    as reading a datasheet. The power levels were alarming to me, and I think most of the people
+    working around them knew it.</p>
+
+    <p>One thing that was noticed and talked about across the four Marine Corps Prowler squadrons was
+    that the kids of the pilots and aircrew were almost all girls. Almost every family. That is
+    something that was observed from inside the community, and it is not a study. There were probably
+    a boy or two somewhere that I did not know about, and small groups of people end up lopsided by
+    chance all the time. So it is not being put here as proof of anything, and it is not meant as a
+    sting. It just stayed with me, and it is the honest reason I care about this more than a typical
+    wireless engineer probably does.</p>
+
+    <p>So I went and looked at what has actually been published on that specific question. The answer
+    turned out to be mixed rather than empty, which was not what I expected. It is all laid out in
+    Part 6 under reproductive outcomes, with the citations attached. The short version is this. A
+    cross sectional study of 10,497 men in the Royal Norwegian Navy found a dose related increase in
+    reported infertility, and it also found a significant trend toward fewer boys as self reported
+    exposure to high frequency aerials and communication equipment went up. A meta analysis published
+    later pooled the broader occupational literature and found no association with offspring sex ratio
+    at all. Both of those got published. Neither one settles it.</p>
+
+    <p>That is the posture of this whole document. It is not saying RF is harmless, because the
+    occupational literature on high power military and radar work does not read that way. It is also
+    not saying that an access point in a ceiling is hurting anybody, because the arithmetic says that
+    AP is delivering something like a billion times less power density than what a jamming pod puts
+    into its own near field. Both of those things are true at the same time. The only way to hold both
+    of them is to understand the numbers, and that is what this is for. The numbers matter because
+    they are the thing that separates a concern worth having from one that is misplaced.</p>
+  </div>
+
+  <p>RF exposure is one of the most heavily measured subjects in engineering, and it is also one of
+  the worst explained. Every Wi-Fi access point, phone, earbud, watch, and base station sold in the
+  United States, Canada, or Europe went through a compliance process before it got to a shelf. That
+  process produces real numbers, and those numbers are public. Almost nobody reads them. Part of the
+  reason is that the words used in those documents are not the words used when people argue about
+  this.</p>
+
+  <p>The goal here is to explain how the measuring and certifying works, well enough that somebody
+  can look up a device, read its regulatory statement, and know what got tested and what did not. It
+  is not claiming consumer RF has been proven harmful. It is also not claiming every question is
+  closed. Both of those go past what the record supports, and in my experience the second one gets
+  said a lot more often than the first.</p>
+
+  <div class="warn">
+    <b>The tier that gets left out.</b> Almost every reassuring statement about RF that you will run
+    into is a statement about <b>consumer devices at consumer distances</b>. It is not a statement
+    about occupational exposure to high power transmitters, military radar, tactical jamming systems,
+    shipboard aerials, or broadcast towers. That is a different exposure regime by orders of
+    magnitude. It is covered by a separate and higher occupational limit, and the studies done on that
+    population are thinner, older, and less reassuring than the consumer ones. Mixing the two tiers
+    together is probably the most common mistake made in this subject, and it gets made by the people
+    who are worried and by the people telling them not to be.
+  </div>
+
+  <h3>What RF exposure is</h3>
+  <p>RF exposure is tissue absorbing non-ionizing electromagnetic energy. Non-ionizing means the
+  photon energy is way below the roughly 10 eV it takes to strip an electron off a molecule. A 6 GHz
+  photon carries about 25 microelectronvolts, so it cannot break a chemical bond the way an X-ray
+  photon does. The interaction that is established at these frequencies is dielectric heating.
+  Oscillating fields push water molecules and ions around, and the friction turns field energy into
+  heat. Every numeric exposure limit in force today traces back, with safety factors applied, to the
+  point where measurable heating starts.</p>
+
+  <div class="key">
+    <b>This is the most important distinction in the document.</b> Regulators use two completely
+    different test methods, and which one applies depends on how close to the body the device gets
+    used.
+    Under about 20 cm, the device is a <b>portable</b> device and is tested for
+    <b>SAR</b> (specific absorption rate, W/kg absorbed in tissue). At or beyond 20 cm it is a
+    <b>mobile</b> device and is evaluated for <b>MPE</b> (maximum permissible exposure, power density
+    in mW/cm&sup2; in air). A phone gets a SAR number. A ceiling access point gets an MPE
+    separation distance. Comparing a phone SAR value against an AP separation distance is comparing two
+ different quantities, measured in different units, by different procedures. It does not mean
+ anything.
+  </div>
+
+  <h3>Common misconceptions</h3>
+  <ul>
+    <li><b>"The 20 cm label means the device is dangerous within 20 cm."</b> What it means is the
+    device was not SAR tested, because the FCC procedure allows the simpler power density evaluation
+    at that distance and beyond. It is a statement about which test got run.</li>
+    <li><b>"Transmit power is the exposure."</b> Exposure is power density at a location. It depends
+    on radiated power, antenna gain, distance squared, and how much of the time the transmitter is
+    actually on. An AP putting out 1 W EIRP from a ceiling delivers a lot less to a person than a
+    0.2 W phone held against the head does.</li>
+    <li><b>"More antennas means more exposure."</b> MIMO radios split up a power budget and add
+    spatial streams. Compliance gets evaluated on total radiated power. Antenna count is not the
+    thing being measured.</li>
+    <li><b>"Certification proves the device is safe."</b> Certification proves the device met a
+    numeric limit under a defined worst case test. That is a compliance claim and not a biology
+    claim. The biology sits in the health agency literature, which is handled separately in Part 6.
+    This distinction gets blurred constantly, usually by people quoting certification as if it
+    settled a health question.</li>
+    <li><b>"5G and Wi-Fi 6E are new physics."</b> They are new spectrum and new modulation. The
+    exposure limits covering those frequencies were written in the 1990s. Whether limits written that
+    long ago are still the right limits is a fair question, and it is taken up in Part 6, but the
+    frequencies themselves are not new territory.</li>
+  </ul>
+
+  <h3>Why Wi-Fi is regulated differently than cell phones</h3>
+  <p>There are three reasons, and all of them are about geometry or procedure. None of them are
+  about anybody deciding one technology deserves a break.</p>
+  <ol>
+    <li><b>Use distance.</b> A phone gets held against the head or carried in a pocket, which puts
+    it inside the antenna near field. An access point gets mounted on a ceiling or a wall, meters
+    away. The near field has to be measured in a tissue simulant. The far field can be calculated.</li>
+    <li><b>Power control behavior.</b> Cellular handsets run closed loop power control against a
+    base station, so they transmit at whatever level holds the link together, up to somewhere around
+    23 to 24 dBm conducted. Wi-Fi access points transmit at a configured level that is set by
+    regulatory domain and channel width.</li>
+    <li><b>Duty cycle.</b> Wi-Fi is contention based and bursty. Even a saturated enterprise AP is
+    only transmitting a fraction of the time on a given radio, and the exposure limits are time
+    averaged over 30 minutes for the general population. Averaging rewards a low duty cycle heavily.
+    This is also where a jammer differs the most from Wi-Fi, since a jammer is designed to be on.</li>
+  </ol>
+
+  <h3>What 20 cm actually means</h3>
+  <p>The arithmetic is not complicated. Free space power density from an isotropically equivalent
+  source is <span class="mono">S = P<sub>EIRP</sub> / (4&pi;d&sup2;)</span>. For 1 W (30 dBm) EIRP at
+  20 cm it works out like this.</p>
+  <div class="card mono">
+S = 1000 mW / (4&pi; &times; 20&sup2; cm&sup2;)<br>
+S = 1000 / 5026.5<br>
+S = 0.199 mW/cm&sup2;<br>
+<br>
+FCC general population limit above 1500 MHz = 1.0 mW/cm&sup2;<br>
+Result = 19.9 percent of the limit, before any duty cycle credit.
+  </div>
+  <p>That is the whole story on the 20 cm number. At 20 cm a full power indoor AP is already sitting
+  about five times under the general population limit, and that is using a 100 percent duty cycle
+  assumption that no real Wi-Fi radio ever actually hits. Put the same radio on a ceiling at 2 m and
+  it produces around 0.002 mW/cm&sup2;, which is roughly 0.2 percent of the limit. The calculator in
+  Part 2 will reproduce these numbers for any power, gain, distance, and duty cycle, and it is worth
+  running yourself rather than taking my word for it.</p>
+
+  <div class="note">
+    <b>How to read this.</b> Part 2 is the physics and the live calculator. Part 3 is who regulates
+    what. Part 4 is the device table. Part 5 is access point engineering. Part 6 is the health
+    literature, including the reproductive studies, with agency positions written the way those
+    agencies wrote them. Part 7 goes through claims that get made publicly, in both directions.
+  </div>
+</section>
+
+<!-- ===================== PART 2 ===================== -->
+<section id="s2">
+  <h2><span class="n">Part 2</span>RF Physics and the Working Math</h2>
+
+  <h3>Electromagnetic fields</h3>
+  <p>An RF source puts out coupled electric (E, volts per meter) and magnetic (H, amperes per meter)
+  fields. Far enough away from the antenna those settle into a plane wave, and the power density is
+  <span class="mono">S = E&sup2; / 377</span> W/m&sup2;, where 377 ohms is the impedance of free
+  space. Close to the antenna, E and H are not in that fixed ratio. That is why near field measurement
+  means probing both of them, or measuring the absorbed energy directly instead.</p>
+
+  <h3>Near field versus far field</h3>
+  <p>The boundary that matters when picking a test method is roughly
+  <span class="mono">d = 2D&sup2; / &lambda;</span>, where D is the largest dimension of the aperture.
+  For a small handset antenna at 2.4 GHz the far field starts within a few centimeters, so the head
+  is sitting inside the reactive and radiating near field. In there, the field structure depends on
+  the tissue being present at all. The tissue loads the antenna. That coupling is the reason SAR has
+  to be measured in a phantom instead of calculated from transmit power. It is also why high power
+  near field situations, like standing next to a pod, are hard to reason about with a simple
+  formula.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Near field</h4>
+      <p>Reactive and radiating near zones. E and H not in free space ratio. Power density is not a
+      meaningful single number. Body presence changes antenna impedance and pattern. Evaluation
+      method: <b>SAR in a tissue simulant phantom</b>.</p>
+    </div>
+    <div class="card">
+      <h4>Far field</h4>
+      <p>Plane wave approximation holds. Power density falls as 1/d&sup2;. Pattern is fixed.
+      Evaluation method: <b>MPE calculation or field probe measurement</b>, compared against a
+      power density limit.</p>
+    </div>
+  </div>
+
+  <h3>The inverse square law</h3>
+  <p>Radiated power spreads out over the surface of a sphere, so density drops with the square of
+  distance. This one relationship does more work in RF exposure than anything else in the document.
+  Double the distance and power density drops by a factor of four, which is 6 dB. Ten times the
+  distance is 100 times less density, or 20 dB. It is also the reason distance is the cheapest control
+  available, in a hangar or in a ceiling.</p>
+
+  <div class="chartwrap">
+    <canvas id="invsq" width="1000" height="330"></canvas>
+    <div class="legend">
+      <span><i style="background:#2b7fa8"></i>Power density from a 1 W EIRP source</span>
+      <span><i style="background:#c0392b"></i>FCC general population limit, 1.0 mW/cm&sup2;</span>
+      <span><i style="background:#2e7d5b"></i>20 cm reference point</span>
+    </div>
+  </div>
+
+  <h3>Power density, EIRP, and antenna gain</h3>
+  <p>EIRP is conducted transmitter power, plus antenna gain, minus cable and connector loss, all in
+  dB. It is the power an isotropic radiator would need to produce the same density in the main beam
+  direction. Exposure math starts from EIRP. It does not start from the number printed on the
+  radio.</p>
+  <div class="card mono">
+EIRP (dBm) = P<sub>conducted</sub> (dBm) + G<sub>antenna</sub> (dBi) &minus; L<sub>cable</sub> (dB)<br>
+P (mW) = 10^(EIRP<sub>dBm</sub> / 10)<br>
+S (mW/cm&sup2;) = P(mW) &times; DutyCycle / (4&pi; &times; d<sub>cm</sub>&sup2;)<br>
+Percent of limit = 100 &times; S / S<sub>limit</sub>
+  </div>
+  <p>A 15 dBi directional antenna raises main beam EIRP by 15 dB. On boresight that is about 32 times
+  the power density, and everywhere else it is less. Gain is not free power, it is redistributed
+  power. That is why exposure assessments on directional antennas are always done boresight worst
+  case, and why where an antenna is pointed is part of the safety answer.</p>
+
+  <h3>SAR, specific absorption rate</h3>
+  <p>SAR is the rate energy gets absorbed per unit of tissue mass, in watts per kilogram. It is
+  measured by scanning an electric field probe through a liquid tissue simulant inside a phantom
+  shaped like a body part, with the device transmitting at maximum power on each band and mode, then
+  computing <span class="mono">SAR = &sigma;E&sup2; / &rho;</span> over whatever averaging mass the
+  rules require.</p>
+  <ul>
+    <li><b>FCC and Health Canada:</b> 1.6 W/kg averaged over 1 gram of tissue, general population,
+    partial body.</li>
+    <li><b>ICNIRP 1998 and 2020, and most of Europe:</b> 2.0 W/kg averaged over 10 grams, head and
+    trunk, general public.</li>
+    <li>The two are not directly comparable. A smaller averaging mass captures a sharper local peak,
+    so the numerically lower 1 g limit is generally the more conservative of the two.</li>
+    <li>Both of them come from a whole body threshold near 4 W/kg where a thermal effect becomes
+    measurable, reduced by a factor of 50 for the general public and 10 for occupational exposure.
+    Worth noticing: the occupational safety factor is five times smaller than the public one. Workers
+    are allowed more exposure on the assumption they are trained, monitored, and informed.</li>
+  </ul>
+
+  <h3>MPE, maximum permissible exposure</h3>
+  <p>MPE is the limit on field strength or power density in air, not in tissue. The limit changes
+  with frequency, because whole body absorption peaks somewhere around 30 to 300 MHz where the human
+  body is roughly resonant. That resonance region is where a lot of military and public safety
+  equipment operates, which is not a coincidence worth ignoring.</p>
+  <table>
+    <thead><tr><th>Frequency range</th><th class="num">General population / uncontrolled</th><th class="num">Occupational / controlled</th><th class="num">Averaging time</th></tr></thead>
+    <tbody>
+      <tr><td>30 to 300 MHz</td><td class="num">0.2 mW/cm&sup2;</td><td class="num">1.0 mW/cm&sup2;</td><td class="num">30 min / 6 min</td></tr>
+      <tr><td>300 to 1500 MHz</td><td class="num">f/1500 mW/cm&sup2;</td><td class="num">f/300 mW/cm&sup2;</td><td class="num">30 min / 6 min</td></tr>
+      <tr><td>1500 to 100000 MHz</td><td class="num">1.0 mW/cm&sup2;</td><td class="num">5.0 mW/cm&sup2;</td><td class="num">30 min / 6 min</td></tr>
+    </tbody>
+  </table>
+  <p>Every Wi-Fi band in use, 2.4 GHz, 5 GHz, and 6 GHz, falls in the top row, so 1.0 mW/cm&sup2; is
+  the number that governs access point evaluations for the general public. The averaging times are
+  worth noticing too. The general population limit is a 30 minute average and the occupational limit
+  is a 6 minute average. Instantaneous peaks above the limit are allowed as long as the average
+  complies, which is a detail that matters a lot for pulsed sources like radar.</p>
+
+  <h3>Duty cycle</h3>
+  <p>Duty cycle is how much of the averaging window the transmitter is actually radiating for. It
+  multiplies straight into the time averaged exposure. This is the single biggest difference between
+  Wi-Fi and a continuous carrier, and it is the reason Wi-Fi numbers come out as low as they do.</p>
+  <table>
+    <thead><tr><th>Scenario</th><th class="num">Typical transmit duty cycle</th><th>Effect on averaged exposure</th></tr></thead>
+    <tbody>
+      <tr><td>Idle access point, beacons only</td><td class="num">under 1 percent</td><td>Over 20 dB reduction</td></tr>
+      <tr><td>Typical enterprise AP, business hours</td><td class="num">5 to 15 percent</td><td>8 to 13 dB reduction</td></tr>
+      <tr><td>Heavily loaded AP, single radio saturated</td><td class="num">40 to 70 percent</td><td>1.5 to 4 dB reduction</td></tr>
+      <tr><td>Continuous carrier, for example an unmodulated test signal</td><td class="num">100 percent</td><td>No reduction, worst case assumption</td></tr>
+      <tr><td>Voice call on a handset</td><td class="num">high, with closed loop power control</td><td>Power control usually dominates</td></tr>
+    </tbody>
+  </table>
+  <div class="warn">
+    <b>How this plays out in practice.</b> Certification filings normally assume worst case duty
+    cycle unless the manufacturer can demonstrate a lower bounded value. So when you read a separation
+    distance on a regulatory label, it was probably derived pessimistically. Real world exposure is
+    usually well under the certified worst case. That cuts the other way too: worst case assumptions
+    are only conservative if the equipment is actually being used the way the filing assumed.
+  </div>
+
+  <h3>Live exposure calculator</h3>
+  <p>This is all the arithmetic above in one place. Change any input and the readouts recompute. The
+  defaults are a full power indoor 6 GHz access point. The presets include an earbud and a directional
+  backhaul radio so the spread between device classes is visible instead of just described.</p>
+
+  <div class="calc">
+    <h3>Free space MPE calculator</h3>
+    <div class="row">
+      <div>
+        <label>Conducted power (dBm)</label>
+        <input type="range" id="cP" min="0" max="40" step="0.5" value="24">
+        <div class="val" id="cPv">24.0 dBm</div>
+      </div>
+      <div>
+        <label>Antenna gain (dBi)</label>
+        <input type="range" id="cG" min="0" max="24" step="0.5" value="6">
+        <div class="val" id="cGv">6.0 dBi</div>
+      </div>
+      <div>
+        <label>Distance (cm)</label>
+        <input type="range" id="cD" min="1" max="500" step="1" value="20">
+        <div class="val" id="cDv">20 cm</div>
+      </div>
+      <div>
+        <label>Duty cycle (percent)</label>
+        <input type="range" id="cU" min="1" max="100" step="1" value="100">
+        <div class="val" id="cUv">100 percent</div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <div>
+        <label>Exposure category</label>
+        <select id="cLim">
+          <option value="1">General population, above 1500 MHz, 1.0 mW/cm2</option>
+          <option value="5">Occupational, above 1500 MHz, 5.0 mW/cm2</option>
+          <option value="0.2">General population, 30 to 300 MHz, 0.2 mW/cm2</option>
+        </select>
+      </div>
+      <div>
+        <label>Preset</label>
+        <select id="cPre">
+          <option value="">Custom</option>
+          <option value="24,6,20,100">Indoor AP, 6 GHz LPI, at 20 cm</option>
+          <option value="24,6,250,10">Indoor AP, ceiling mount 2.5 m, 10 percent duty</option>
+          <option value="21,15,100,100">Directional 15 dBi backhaul radio at 1 m boresight</option>
+          <option value="30,6,300,50">Outdoor standard power AP at 3 m</option>
+          <option value="4,0,5,50">Bluetooth earbud, class 2, at 5 cm</option>
+          <option value="20,2,100,25">Consumer router at 1 m</option>
+        </select>
+      </div>
+    </div>
+    <div class="readout">
+      <div class="ro"><span>EIRP</span><b id="rE">30.0 dBm</b><span id="rEm">1000 mW</span></div>
+      <div class="ro"><span>Power density</span><b id="rS">0.199</b><span>mW/cm&sup2; time averaged</span></div>
+      <div class="ro"><span>Percent of limit</span><b id="rP">19.9%</b><span id="rM">margin 7.0 dB</span></div>
+    </div>
+    <div class="meter"><i id="rBar"></i></div>
+    <div id="rBadge" class="badge"></div>
+    <p style="font-size:12.5px;opacity:.85;margin-top:14px">Free space far field model, main beam,
+    no reflections, no body shielding. Appropriate for the far field only. At distances inside the
+    near field boundary this model is not valid and SAR measurement applies instead.</p>
+  </div>
+</section>
+
+<!-- ===================== PART 3 ===================== -->
+<section id="s3">
+  <h2><span class="n">Part 3</span>Regulatory and Standards Bodies</h2>
+
+  <p>The agencies that enforce exposure limits are not the ones that write them. Standards bodies
+  derive the limits from the literature, and then regulators adopt them into law. Knowing who does
+  which explains most of what looks like disagreement between countries.</p>
+
+  <table>
+    <thead><tr><th>Body</th><th>Role</th><th>Key instrument</th><th>What it actually sets</th></tr></thead>
+    <tbody>
+      <tr><td><b>FCC</b> (United States)</td><td>Regulator</td><td>47 CFR 1.1307, 1.1310, 2.1091, 2.1093; OET Bulletin 65</td><td>Legally binding MPE limits and SAR limit of 1.6 W/kg over 1 g. Defines mobile versus portable at 20 cm. Runs equipment authorization.</td></tr>
+      <tr><td><b>FDA</b> (United States)</td><td>Health authority</td><td>Radiation Control for Health and Safety Act; 21 CFR 1030.10</td><td>Reviews the health science for radiation emitting products, advises the FCC, and sets microwave oven leakage limits.</td></tr>
+      <tr><td><b>ISED</b> (Canada)</td><td>Regulator</td><td>RSS-102, RSS-247</td><td>Adopts Safety Code 6 limits into equipment certification, including SAR and RF exposure evaluation for Canadian market devices.</td></tr>
+      <tr><td><b>Health Canada</b></td><td>Health authority</td><td>Safety Code 6 (2015)</td><td>Canadian exposure limits. SAR 1.6 W/kg over 1 g for general public, comparable in structure to FCC.</td></tr>
+      <tr><td><b>ICNIRP</b></td><td>Independent scientific body, formally recognized by WHO</td><td>Guidelines 1998, revised 2020</td><td>The limits most of the world adopts. 2 W/kg over 10 g head and trunk for general public, plus new whole body and local limits above 6 GHz added in 2020.</td></tr>
+      <tr><td><b>WHO</b></td><td>Health authority</td><td>EMF Project; fact sheets</td><td>Assesses health evidence, does not set enforceable limits. Coordinates research agendas.</td></tr>
+      <tr><td><b>IARC</b> (part of WHO)</td><td>Cancer hazard classification</td><td>Monograph Vol. 102 (2013)</td><td>Classified RF electromagnetic fields as Group 2B, possibly carcinogenic to humans. See Part 6 for what 2B means.</td></tr>
+      <tr><td><b>IEEE ICES</b></td><td>Standards body</td><td>IEEE C95.1-2019, C95.7</td><td>Consensus exposure standard, harmonized substantially with ICNIRP 2020. Basis for many national rules and for RF safety programs.</td></tr>
+      <tr><td><b>ETSI and CENELEC</b> (Europe)</td><td>Standards bodies</td><td>EN 50385, EN 50665, EN 62311, EN 62479</td><td>Harmonized standards used to demonstrate conformity with the EU Radio Equipment Directive.</td></tr>
+      <tr><td><b>IEC</b></td><td>Measurement methodology</td><td>IEC 62209-1528, IEC 62232</td><td>How SAR and base station exposure are actually measured, so results are reproducible between labs.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Why national numbers differ without the science differing</h3>
+  <ul>
+    <li><b>Averaging mass.</b> 1 g in the United States and Canada, 10 g under ICNIRP. Different
+    spatial averaging and a different numeric limit, but the protection intent is comparable.</li>
+    <li><b>Precautionary policy adders.</b> A few jurisdictions, including Switzerland, Italy, and
+    parts of Belgium, apply limits well below ICNIRP for base station installations. Those are
+    policy choices layered on top of the science, not different scientific conclusions.</li>
+    <li><b>Adoption lag.</b> ICNIRP revised its guidelines in 2020, and the FCC affirmed its
+    existing limits in 2019. So the two frameworks do not line up on every detail even where the
+    underlying literature review overlaps. US limits date to 1996 in their substance.</li>
+  </ul>
+
+  <div class="note">
+    <b>How to verify a specific device.</b> Every device certified for the United States market has
+    an FCC ID. Search it in the FCC Equipment Authorization Search
+    (<span class="mono">fcc.gov/oet/ea/fccid</span>) and read the RF exposure exhibit. That document
+    is the record of what got tested and at what separation distance. Marketing material is not, and
+    neither is third party commentary, in either direction.
+  </div>
+</section>
+
+<!-- ===================== PART 4 ===================== -->
+<section id="s4">
+  <h2><span class="n">Part 4</span>Device Reference Table</h2>
+
+  <p>This table is organized by <b>which compliance path applies</b>, because that is what determines
+  how the published numbers should be read. The power columns are representative of the device class
+  and its regulatory ceiling. Use them for orientation, then confirm against the specific FCC ID
+  exhibit or the vendor regulatory guide before quoting a number in a report or to a customer.</p>
+
+  <input id="q" placeholder="Filter: type a device, technology, or method, for example  6 GHz   or   SAR   or   Cisco">
+  <table id="dev">
+    <thead><tr>
+      <th>Device class</th><th>Technology</th><th class="num">Typical max EIRP</th>
+      <th>Method</th><th>Separation basis</th><th>Notes</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Indoor enterprise AP, ceiling mount</td><td>Wi-Fi 6E / 7, 6 GHz LPI</td><td class="num">30 dBm at 320 MHz</td><td><span class="tag t-mpe">MPE</span></td><td>20 cm, per vendor install guide</td><td>PSD limited: 5 dBm/MHz means narrower channels get lower total EIRP</td></tr>
+      <tr><td>Indoor enterprise AP</td><td>Wi-Fi 6, 5 GHz UNII-1/3</td><td class="num">up to 36 dBm</td><td><span class="tag t-mpe">MPE</span></td><td>20 cm</td><td>Actual configured power set by regulatory domain and RRM</td></tr>
+      <tr><td>Indoor enterprise AP</td><td>Wi-Fi, 2.4 GHz</td><td class="num">up to 36 dBm</td><td><span class="tag t-mpe">MPE</span></td><td>20 cm</td><td>Usually configured far lower to control cell size</td></tr>
+      <tr><td>Outdoor AP, standard power</td><td>Wi-Fi 6E / 7, 6 GHz SP</td><td class="num">36 dBm ceiling</td><td><span class="tag t-mpe">MPE</span></td><td>Larger, per install guide, often over 20 cm</td><td>Requires AFC and geolocation; AFC may grant less than the ceiling</td></tr>
+      <tr><td>Industrial / URWB radio with directional antenna</td><td>Wi-Fi, 5 or 6 GHz</td><td class="num">EIRP dominated by 13 to 17 dBi gain</td><td><span class="tag t-mpe">MPE</span></td><td>Boresight worst case, vendor specified</td><td>Directional gain drives boresight density; behind the antenna is far lower</td></tr>
+      <tr><td>Stadium / directional indoor AP</td><td>Wi-Fi</td><td class="num">high, narrow beam</td><td><span class="tag t-mpe">MPE</span></td><td>Boresight, aimed away from occupants</td><td>Aiming is part of the compliance argument</td></tr>
+      <tr><td>Smartphone, flagship class</td><td>5G NR, LTE, Wi-Fi, BT</td><td class="num">dynamic, roughly 23 to 24 dBm conducted cellular</td><td><span class="tag t-sar">SAR</span></td><td>Head at contact, body at 5 to 15 mm as tested</td><td>Closed loop power control means typical output is far below maximum</td></tr>
+      <tr><td>Tablet</td><td>Wi-Fi, optional cellular</td><td class="num">dynamic</td><td><span class="tag t-sar">SAR</span></td><td>Body worn distance as declared</td><td>Larger chassis usually spreads absorption, lowering peak SAR</td></tr>
+      <tr><td>Laptop with internal Wi-Fi</td><td>Wi-Fi 6E / 7 client</td><td class="num">client caps, for example 24 dBm at 320 MHz LPI</td><td><span class="tag t-sar">SAR</span></td><td>Lap and edge positions as tested</td><td>Client EIRP caps sit 6 dB below the AP caps under 6 GHz rules</td></tr>
+      <tr><td>Smartwatch</td><td>BT, Wi-Fi, optional LTE</td><td class="num">low, typically under 20 dBm</td><td><span class="tag t-sar">SAR</span></td><td>Wrist contact, extremity limits may apply</td><td>Extremity SAR limit in the FCC framework is 4 W/kg over 10 g</td></tr>
+      <tr><td>Bluetooth earbuds</td><td>BT class 2 / LE</td><td class="num">typically 4 to 10 dBm</td><td><span class="tag t-sar">SAR</span> or <span class="tag t-ex">exempt</span></td><td>Contact</td><td>Very low power devices can qualify for SAR test exemption thresholds</td></tr>
+      <tr><td>Wireless earbud charging case, wearables</td><td>BT LE</td><td class="num">very low</td><td><span class="tag t-ex">exempt</span></td><td>n/a</td><td>Below exemption threshold, no SAR test required</td></tr>
+      <tr><td>Consumer Wi-Fi router, mesh node</td><td>Wi-Fi 6 / 6E / 7</td><td class="num">typically 20 to 30 dBm EIRP</td><td><span class="tag t-mpe">MPE</span></td><td>20 cm, printed in the manual</td><td>Same 20 cm statement as enterprise gear, same reason</td></tr>
+      <tr><td>Baby monitor, video</td><td>2.4 GHz FHSS or Wi-Fi</td><td class="num">low, often under 20 dBm</td><td><span class="tag t-mpe">MPE</span></td><td>20 cm typical</td><td>Placement distance matters more than the radio; 1/d&sup2; dominates</td></tr>
+      <tr><td>Cellular macro base station</td><td>5G NR, LTE</td><td class="num">tens of dBW EIRP, sectorized</td><td><span class="tag t-mpe">MPE</span></td><td>Meters, with compliance boundary drawings</td><td>Beam is tilted down and away; ground level density is normally a small fraction of the limit</td></tr>
+      <tr><td>Small cell, indoor DAS antenna</td><td>5G NR, LTE</td><td class="num">low relative to macro</td><td><span class="tag t-mpe">MPE</span></td><td>Vendor specified, often tens of cm</td><td>Closer but far lower power, which is the intended trade</td></tr>
+      <tr><td>Public safety portable radio</td><td>LMR, VHF / UHF / 700 / 800</td><td class="num">up to 5 W conducted</td><td><span class="tag t-sar">SAR</span></td><td>Body worn, occupational category common</td><td>Frequencies in the more restrictive MPE region; occupational limits and training apply</td></tr>
+      <tr><td>Amateur radio HF / VHF station</td><td>Amateur service</td><td class="num">up to 1500 W PEP</td><td><span class="tag t-mpe">MPE</span></td><td>Station evaluation, distance to controlled area</td><td>Licensee is required to perform an exposure evaluation for the station</td></tr>
+      <tr><td>Microwave oven</td><td>2.45 GHz, contained</td><td class="num">700 to 1200 W into the cavity</td><td>Product safety, not RF exposure certification</td><td>5 cm from surface</td><td>FDA leakage limit 5 mW/cm&sup2; at 5 cm over the product lifetime, 21 CFR 1030.10</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <b>This table is not a citation.</b> It is a map of compliance paths and device classes, built
+    from published regulatory ceilings and how each category behaves. For any specific model the
+    citable sources are the FCC ID exhibit, the vendor regulatory compliance guide, and the vendor
+    hardware installation guide. If somebody wants per model numbers, those three documents are where
+    they come from.
+  </div>
+</section>
+
+<!-- ===================== PART 5 ===================== -->
+<section id="s5">
+  <h2><span class="n">Part 5</span>Access Point Engineering, Where Exposure Meets Design</h2>
+
+  <p>If you deploy wireless, exposure compliance is not a separate job. It falls out of decisions
+  that are already being made anyway: regulatory domain, channel width, antenna selection, mount
+  height, and power control policy.</p>
+
+  <h3>EIRP is the design variable</h3>
+  <p>Conducted power by itself tells you nothing about coverage or about exposure. Here are two
+  examples using the same radio setting.</p>
+  <table>
+    <thead><tr><th>Configuration</th><th class="num">Conducted</th><th class="num">Gain</th><th class="num">EIRP</th><th class="num">S at 20 cm</th><th class="num">S at 2.5 m</th></tr></thead>
+    <tbody>
+      <tr><td>Omni ceiling AP, 6 GHz</td><td class="num">18 dBm</td><td class="num">6 dBi</td><td class="num">24 dBm (251 mW)</td><td class="num">0.050 mW/cm&sup2;</td><td class="num">0.00032 mW/cm&sup2;</td></tr>
+      <tr><td>Directional industrial radio</td><td class="num">18 dBm</td><td class="num">15 dBi</td><td class="num">33 dBm (1995 mW)</td><td class="num">0.397 mW/cm&sup2;</td><td class="num">0.00254 mW/cm&sup2;</td></tr>
+    </tbody>
+  </table>
+  <p>Same transmitter, and eight times the boresight density, all of it from 9 dB of antenna gain.
+  Even the directional case at 2.5 m still comes out around 0.25 percent of the general population
+  limit before any duty cycle credit is applied. Mount geometry is doing most of the work here.</p>
+
+  <h3>The 6 GHz power regimes, and why they change the exposure conversation</h3>
+  <p>Under 47 CFR 15.407 the 6 GHz band uses power spectral density limits instead of one single EIRP
+  ceiling. Total EIRP is <span class="mono">PSD limit + 10&times;log10(channel width in MHz)</span>,
+  capped by an EIRP ceiling, and whichever one binds first is the real limit.</p>
+  <table>
+    <thead><tr><th>Regime</th><th class="num">AP EIRP / PSD</th><th class="num">Client EIRP / PSD</th><th>Where</th><th>Coordination</th></tr></thead>
+    <tbody>
+      <tr><td><b>LPI</b> low power indoor</td><td class="num">30 dBm / 5 dBm/MHz</td><td class="num">24 dBm / &minus;1 dBm/MHz</td><td>Indoor only</td><td>None</td></tr>
+      <tr><td><b>SP</b> standard power</td><td class="num">36 dBm / 23 dBm/MHz</td><td class="num">30 dBm / 17 dBm/MHz</td><td>Indoor and outdoor</td><td>AFC plus geolocation</td></tr>
+      <tr><td><b>VLP</b> very low power</td><td class="num">about 14 dBm</td><td class="num">same</td><td>Anywhere</td><td>None</td></tr>
+      <tr><td><b>GVP</b> geofenced variable power</td><td class="num">24 dBm / 11 dBm/MHz</td><td class="num">18 dBm / 5 dBm/MHz</td><td>Outdoor</td><td>Geofencing</td></tr>
+    </tbody>
+  </table>
+  <h4>LPI EIRP by channel width</h4>
+  <table>
+    <thead><tr><th class="num">Channel width</th><th class="num">AP max EIRP</th><th class="num">Client max EIRP</th><th class="num">AP S at 20 cm</th></tr></thead>
+    <tbody>
+      <tr><td class="num">20 MHz</td><td class="num">18 dBm</td><td class="num">12 dBm</td><td class="num">0.0126 mW/cm&sup2;</td></tr>
+      <tr><td class="num">40 MHz</td><td class="num">21 dBm</td><td class="num">15 dBm</td><td class="num">0.0251 mW/cm&sup2;</td></tr>
+      <tr><td class="num">80 MHz</td><td class="num">24 dBm</td><td class="num">18 dBm</td><td class="num">0.0501 mW/cm&sup2;</td></tr>
+      <tr><td class="num">160 MHz</td><td class="num">27 dBm</td><td class="num">21 dBm</td><td class="num">0.0999 mW/cm&sup2;</td></tr>
+      <tr><td class="num">320 MHz</td><td class="num">30 dBm</td><td class="num">24 dBm</td><td class="num">0.199 mW/cm&sup2;</td></tr>
+    </tbody>
+  </table>
+  <div class="key">
+    <b>This is a point worth making publicly.</b> The headline number people react to, 30 dBm
+    indoors on 6 GHz, is only reachable on a 320 MHz channel. Most real deployments run 80 MHz or
+    less, and that caps an LPI access point at 24 dBm EIRP or under. On top of that, measured radios
+    back off several dB from the legal ceilings to meet modulation error requirements. The gap between
+    the number in a rulebook and the power actually leaving an antenna is real, and it goes
+    downward.
+  </div>
+
+  <h3>Other design factors that interact with exposure</h3>
+  <ul>
+    <li><b>Regulatory domain.</b> The domain code in the AP part number determines available channels
+    and legal power. A domain mismatch is a compliance problem, not a performance preference.</li>
+    <li><b>DFS.</b> Dynamic frequency selection protects radar in 5 GHz UNII-2. It is a spectrum
+    sharing requirement, unrelated to human exposure, and frequently confused with it.</li>
+    <li><b>AFC on 6 GHz.</b> Automated frequency coordination protects incumbent fixed links by
+    granting channel and power per location. It can authorize less than the 36 dBm ceiling, and the
+    client cap tracks 6 dB below the authorized level.</li>
+    <li><b>RRM and transmit power control.</b> Automatic power control means the real EIRP is usually
+    well below the configured maximum. Compliance assessments assume the maximum anyway.</li>
+    <li><b>Mount height is a control.</b> Moving a ceiling AP from 2.0 m up to 3.0 m drops power
+    density at head height by roughly 7 dB, and it takes no configuration change at all. If somebody
+    is concerned, this is the lever that actually works.</li>
+  </ul>
+
+  <h3>Practical installer checklist</h3>
+  <ol>
+    <li>Read the vendor hardware installation guide for that specific model and write down the stated
+    minimum separation distance.</li>
+    <li>Respect that distance for occupied positions, not just for the mounting bracket.</li>
+    <li>For directional antennas, keep boresight out of continuously occupied space, or increase the
+    distance along boresight specifically.</li>
+    <li>Confirm the regulatory domain matches the installation country.</li>
+    <li>For outdoor standard power on 6 GHz, confirm AFC registration and the granted power level.</li>
+    <li>Document the mount height, the antenna type, and the configured maximum power. When somebody
+    asks the exposure question a year later, that documentation is the answer. Not having it is how a
+    reasonable question turns into an argument.</li>
+  </ol>
+</section>
+
+<!-- ===================== PART 6 ===================== -->
+<section id="s6">
+  <h2><span class="n">Part 6</span>Scientific Literature and Agency Positions</h2>
+
+  <p>This part states positions the way the issuing bodies stated them. It also separates three
+  things that get merged together constantly in public discussion: what is established, what is
+  required by regulation, and what is still an open research question. Those are not the same thing,
+  and treating them as the same thing is how people end up talking past each other.</p>
+
+  <div class="grid3">
+    <div class="card" style="border-top:4px solid var(--green)">
+      <h4 style="color:var(--green)">Established</h4>
+      <p>The dominant interaction mechanism at RF frequencies is heating. Limits are set 10 to 50
+      times below the thresholds where a thermal effect becomes observable. Exposure falls off with
+      the square of distance. Certification testing measures worst case rather than typical use.</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--sky2)">
+      <h4 style="color:var(--sky1)">Required by regulation</h4>
+      <p>SAR at 1.6 W/kg over 1 g in the United States and Canada. MPE at 1.0 mW/cm&sup2; general
+      population above 1500 MHz. The 20 cm mobile versus portable boundary. Time averaging over
+      30 minutes general population and 6 minutes occupational.</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber)">
+      <h4 style="color:var(--amber)">Open or contested</h4>
+      <p>Whether any non thermal mechanism produces adverse outcomes at compliant levels. <b>Male
+      fertility and offspring sex ratio in high exposure occupational groups, where studies genuinely
+      conflict.</b> Long term exposure in children. Interpretation of the NTP and Ramazzini animal
+      findings. Effects above 6 GHz, where ICNIRP added new limits in 2020 partly because data were
+      sparse. <b>Aircrew on tactical electronic warfare platforms, where no dedicated study appears in
+      the indexed literature at all.</b></p>
+    </div>
+  </div>
+
+  <h3>Reproductive outcomes and offspring sex ratio</h3>
+  <p>This is the question that got me to write this. It is covered in full here because it is where
+  the occupational literature and the consumer literature separate the most. It is also an area where
+  the published results disagree with each other, and that is a different situation than there being
+  no evidence at all. When somebody says there is nothing there, that is not accurate.</p>
+
+  <table>
+    <thead><tr><th>Study</th><th>Population and exposure</th><th>Finding</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Baste, Riise, Moen (2008)</b><br>Eur J Epidemiol 23(5):369-77<br>PMID 18415687</td>
+        <td>Cross sectional, 10,497 male respondents, Royal Norwegian Navy. 22 percent had worked
+        close to high frequency aerials to a high or very high degree. Self reported exposure.</td>
+        <td>Infertility rose significantly with increasing reported exposure. Odds ratio 1.86
+        (95 percent CI 1.46 to 2.37) for working within 10 m of high frequency aerials to a very high
+        degree, adjusted for age, smoking, alcohol, solvents, welding, and lead. <b>Significant linear
+        trends toward a lower ratio of boys to girls at birth</b> with higher reported paternal
+        exposure, for both high frequency aerials and communication equipment.</td>
+      </tr>
+      <tr>
+        <td><b>M&oslash;llerl&oslash;kken and Moen (2008)</b><br>Bioelectromagnetics 29(5):345-52<br>PMID 18240289</td>
+        <td>Cross sectional, 1,487 Norwegian Navy men, 63 percent response. Work categories rated for
+        EMF exposure by an expert group.</td>
+        <td>Increased risk of infertility in tele/communication (OR 1.72, CI 1.04 to 2.85) and
+        radar/sonar (OR 2.28, CI 1.27 to 4.09) groups. Electronics group showed no increase. Authors
+        state results must be interpreted with caution.</td>
+      </tr>
+      <tr>
+        <td><b>Tong, Liu, Liu (2013)</b><br>Zhonghua Nan Ke Xue 19(2):153-8<br>PMID 23441458</td>
+        <td>Meta analysis of paternal occupational electromagnetic radiation exposure and offspring
+        sex ratio, pooling PubMed, Embase, Cochrane, OVID, BIOSIS, and Chinese databases.</td>
+        <td><b>No association.</b> Pooled OR 1.00 (95 percent CI 0.95 to 1.05, p = 0.875). Subgroup
+        analyses of case control and cohort studies separately also showed no significant difference.
+        Conclusion stated as no correlation.</td>
+      </tr>
+      <tr>
+        <td><b>Yan et al. (2007)</b><br>Zhonghua Nan Ke Xue 13(4):306-8<br>PMID 17491260</td>
+        <td>289 married male radar operators versus 148 unexposed controls, long term low intensity
+        microwave exposure, questionnaire plus field intensity measurement.</td>
+        <td>Sexual dysfunction 43.6 percent in the radar group versus 24.4 percent in controls
+        (p &lt; 0.01). Natural pregnancy within one year of marriage 53.6 percent versus 81.1 percent
+        (p &lt; 0.01).</td>
+      </tr>
+      <tr>
+        <td><b>Cordelli et al. (2023)</b><br>Environ Int 180:108178<br>PMID 37729852</td>
+        <td>WHO commissioned systematic review and meta analysis, 88 papers, in utero RF exposure in
+        non human mammals. Protocol PROSPERO CRD42021227746.</td>
+        <td>High certainty for <b>no</b> effect on litter size. Moderate certainty for a small
+        decrease in fetal weight. Significant increases in resorbed and dead fetuses (OR 1.84) and in
+        litters with malformed fetuses (OR 3.22), but at whole body average SAR of 20.26 and
+        16.63 W/kg respectively, far above consumer limits, and rated low to very low certainty.
+        Authors state explicitly that the evidence base <b>did not allow assessment of whether
+        effects occur below levels that produce known adverse heating</b>. Sex ratio change was a
+        prespecified endpoint in the review protocol.</td>
+      </tr>
+      <tr>
+        <td><b>Goldsmith (1995)</b><br>Int J Occup Environ Health 1(1):47-57<br>PMID 9990158</td>
+        <td>Opinion review of military, broadcast, and occupational RF exposure, including Polish
+        soldiers, US naval radar personnel from Korea, Skrunda transmitter, and US embassy staff in
+        Eastern Europe.</td>
+        <td>Argues sufficient microwave exposure is associated with blood count changes, somatic
+        mutation, impaired reproductive outcomes, and cancer, and recommends more protection than
+        regulations require. <b>The author states the review has a positive reporting bias and made no
+        systematic effort to include negative studies.</b> Cited here because it is frequently
+        referenced in this debate and readers should know its stated limitation.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="key">
+    <b>How I read this.</b> The Norwegian Navy cohort is the biggest study that directly reports a
+    sex ratio shift with paternal RF exposure, and it found one, with a dose trend behind it. It is
+    also cross sectional and the exposure was self reported, which cannot establish causation and is
+    open to recall effects. The 2013 meta analysis pooled the wider literature and found nothing,
+    which is strong evidence against a large general effect, but it does not specifically rule out a
+    high exposure military subgroup. The animal evidence does show real reproductive harm, but at
+    whole body SAR levels of 16 to 20 W/kg. That is roughly ten times the 1.6 W/kg localized consumer
+    limit, and it is in a range where heating is happening. What does not exist, at least in the
+    indexed literature, is a dedicated study of aircrew on tactical electronic warfare platforms.
+    PubMed searches for the EA-6B Prowler and for aircrew RF reproductive outcomes come back empty.
+    That is not evidence of safety. It just means nobody studied it.
+  </div>
+
+  <div class="note">
+    <b>Why an observation like the one in Part 1 is worth taking seriously without calling it
+    proof.</b> Sex ratio at birth in humans runs about 105 boys per 100 girls, so roughly 51 percent
+    boys. In a group of 20 families, all girls would be a chance event somewhere near one in a
+    million, and that sounds conclusive. But clusters in the real world are not drawn cleanly. The
+    boundary of the group gets picked after the pattern is already noticed, the families with boys are
+    less memorable to whoever is noticing, and squadron rosters turn over. Those biases are strong
+    enough on their own to make ordinary randomness look like a pattern. That is why formal studies
+    exist. It is also why the right response to a cluster observation is to go look for the study
+    rather than to wave off the person who noticed. In this case the closest study that exists points
+    the same direction the observation did, and the meta analysis does not. That is where the evidence
+    actually sits, and I am fine leaving it there.
+  </div>
+
+  <h3>Agency positions</h3>
+  <table>
+    <thead><tr><th>Source</th><th>Position, as stated</th></tr></thead>
+    <tbody>
+      <tr><td><b>WHO</b>, EMF fact sheets</td><td>No adverse health effects have been established as being caused by mobile phone use at levels below international exposure guidelines. WHO states research is continuing and coordinates further study.</td></tr>
+      <tr><td><b>IARC</b>, Monograph Vol. 102, 2013</td><td>Radiofrequency electromagnetic fields classified <b>Group 2B, possibly carcinogenic to humans</b>, based on limited evidence in humans for glioma and acoustic neuroma from heavy mobile phone use. Group 2B is the category for limited evidence; it indicates a hazard cannot be ruled out, not that risk has been quantified.</td></tr>
+      <tr><td><b>US FDA</b>, review of published literature</td><td>The available scientific evidence does not show that any health problems are associated with using wireless devices at exposure levels within current limits. FDA has stated that the totality of the evidence does not support adverse health effects in humans from RF exposure at those levels.</td></tr>
+      <tr><td><b>NTP</b>, National Toxicology Program, 2018 final reports</td><td>Found <b>clear evidence</b> of malignant schwannoma in the hearts of male rats exposed to high level GSM and CDMA modulated RF for 9 hours per day over two years, with equivocal or no findings in female rats and mice. Exposure levels reached and exceeded whole body SAR values well above consumer device limits, and rats in the highest groups showed measurable body temperature increases.</td></tr>
+      <tr><td><b>Ramazzini Institute</b>, 2018</td><td>Reported an increase in heart schwannoma in male rats from far field 1.8 GHz base station like exposure at levels below FCC and ICNIRP limits. Authors described the finding as consistent in tumor type with NTP. Study design, statistical power, and historical control comparisons have been debated in the literature.</td></tr>
+      <tr><td><b>ICNIRP</b>, 2020 guidelines and NTP commentary</td><td>Concluded the NTP and Ramazzini results do not provide a basis for revising exposure limits, citing dose levels, thermal confounding, and inconsistency across species and sexes. ICNIRP 2020 nonetheless added new restrictions for frequencies above 6 GHz and for brief high intensity exposures.</td></tr>
+      <tr><td><b>IEEE C95.1-2019</b></td><td>Consensus standard substantially harmonized with ICNIRP 2020, reaffirming thermal basis with safety factors and adding refinements for short duration and higher frequency exposure.</td></tr>
+      <tr><td><b>FCC</b>, 2019 Resolution of Notice of Inquiry</td><td>Declined to change existing RF exposure limits, stating no evidence in the record established that the limits are inadequate. The decision was challenged and in 2021 the D.C. Circuit remanded, finding the FCC had not adequately explained its treatment of evidence in the record, particularly regarding non cancer effects and children.</td></tr>
+      <tr><td><b>Health Canada</b>, Safety Code 6, 2015 and subsequent reviews</td><td>Maintains that compliance with Safety Code 6 protects against all known adverse health effects, and states its limits are reviewed against new literature on an ongoing basis.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>How to read an animal study dose honestly</h3>
+  <p>The NTP result is the most cited animal finding in this field, by both sides, and both sides
+  usually skip the dosimetry when they cite it. Here are the relevant facts.</p>
+  <ul>
+    <li>The exposure was whole body, continuous across 9 hour daily cycles, for the animals' whole
+    lifetime. Consumer device SAR limits describe localized intermittent peaks in a small mass of
+    tissue. Those are not the same exposure.</li>
+    <li>The highest exposure groups had measurable core temperature increases, so thermal confounding
+    cannot be ruled out at those levels.</li>
+    <li>The findings were not consistent across sex and species, and exposed male rats in some groups
+    actually lived longer than the controls, which makes interpretation harder.</li>
+    <li>None of that makes the finding meaningless. It means the finding does not translate straight
+    into a human risk estimate at compliant exposure levels. NTP said that itself.</li>
+  </ul>
+
+  <div class="note">
+    <b>What honest uncertainty sounds like.</b> The current limits are built on a mechanism that is
+    well characterized, with large safety factors applied, and decades of epidemiology have not
+    established adverse effects at compliant exposure. At the same time, some animal findings are
+    still unexplained, the exposure environment has changed faster than the epidemiological record can
+    keep up with, the occupational literature on high power sources is thinner than the consumer
+    literature, and a federal appeals court told the FCC that its 2019 explanation was not good
+    enough. All of that is true at once. Anybody who tells you it reduces to one clean sentence is
+    selling something.
+  </div>
+</section>
+
+<!-- ===================== PART 7 ===================== -->
+<section id="s7">
+  <h2><span class="n">Part 7</span>Putting RF Into Perspective</h2>
+
+  <p>People have a hard time with relative exposure because there is no reference frame for it. Below
+  is the same free space calculation applied to typical use geometry for each device class, shown as a
+  percentage of the FCC general population limit. No duty cycle credit is applied, so every bar is a
+  pessimistic number. The occupational sources are on the same chart on purpose, because leaving them
+  off is what makes the consumer numbers look like the whole story.</p>
+
+  <div class="chartwrap">
+    <canvas id="perspective" width="1000" height="470"></canvas>
+    <div class="legend">
+      <span><i style="background:#2e7d5b"></i>Under 1 percent of limit</span>
+      <span><i style="background:#c9871f"></i>1 to 25 percent</span>
+      <span><i style="background:#c0392b"></i>Above 25 percent</span>
+      <span><i style="background:#5b4b8a"></i>* Near field or contact use. The MPE limit does not apply
+      to these and the free space formula is not valid at that distance. They are SAR tested instead.
+      The bar is an illustration of scale only, not a compliance figure.</span>
+      <span>Log scale. Bars are worst case, 100 percent duty cycle, main beam, no body shielding.</span>
+    </div>
+  </div>
+
+  <p>A few things come out of that chart right away. The devices people worry about the most, the
+  ceiling access point and the cellular tower, produce the lowest numbers, because distance and the
+  inverse square law swamp everything else. The purple bars marked with an asterisk are the near field
+  and contact cases, and those are the ones where this free space formula stops being valid. That is
+  exactly why those devices get SAR tested in a phantom instead of MPE evaluated, and it is why those
+  bars are there for scale rather than as a compliance statement. Then there is the occupational group
+  at the top, which is a different world entirely. That is where exposure actually gets high enough
+  that keep-out zones, training, and monitoring exist for a reason. The regulatory structure follows
+  the physics on all of it.</p>
+
+  <div class="warn">
+    The point of this comparison is not to declare anything safe. It is to show that <b>these exposure
+    scenarios are not comparable to each other</b>. Any argument that treats "RF" as one single thing
+    is going to land on a wrong conclusion, and it does not matter which direction it was headed.
+  </div>
+
+  <h3>Claims and what the record supports</h3>
+
+  <div class="myth">
+    <div class="m">"The 20 cm warning in the manual proves the manufacturer knows the device is harmful up close."</div>
+    <div class="r"><b>What the record supports:</b> 20 cm is where the FCC draws the line between a
+    mobile device and a portable device, in 47 CFR 2.1091 and 2.1093. At that distance or beyond, the
+    manufacturer is allowed to demonstrate compliance with a power density evaluation. Inside it, SAR
+    testing in a phantom is required. So the statement in the manual is telling you which test method
+    was used. Run it through Part 2 and a full power indoor AP at exactly 20 cm comes out around
+    20 percent of the general population limit, at a 100 percent duty cycle that it never sees.</div>
+  </div>
+
+  <div class="myth">
+    <div class="m">"Wi-Fi is safe. This has been settled for decades."</div>
+    <div class="r"><b>What the record supports:</b> No adverse health effect has been established at
+    compliant exposure levels, and that is the stated position of WHO, FDA, and Health Canada. But the
+    IARC 2B classification is still standing, some animal findings are still unexplained, the
+    occupational studies in Part 6 conflict with each other, and in 2021 the D.C. Circuit remanded the
+    FCC decision not to revisit its limits. "Nothing has been established" is accurate. "Settled" goes
+    further than the record does.</div>
+  </div>
+
+  <div class="myth">
+    <div class="m">"5G uses millimeter waves that penetrate deeper and cause more damage."</div>
+    <div class="r"><b>What the record supports:</b> Higher frequencies penetrate <b>less</b>, not
+    more. Absorption depth goes down as frequency goes up, which is why millimeter wave energy lands in
+    skin and the outer few millimeters of tissue. That shallow deposition is the reason ICNIRP added
+    new surface limits above 6 GHz in 2020. Also, most deployed 5G in the United States is running in
+    sub 6 GHz spectrum, not millimeter wave.</div>
+  </div>
+
+  <div class="myth">
+    <div class="m">"A router in the bedroom is like sleeping next to a cell tower."</div>
+    <div class="r"><b>What the record supports:</b> A macro base station radiates far more power, but
+    it is tens of meters away with the beam tilted down, and ground level density routinely comes out
+    a small fraction of the limit. A router radiates roughly one watt EIRP at a meter or two. Both end
+    up far below the limit, by completely different routes. The comparison is not wrong because one is
+    safe and the other is not. It is wrong because it throws out 1/d&sup2;.</div>
+  </div>
+
+  <div class="myth">
+    <div class="m">"SAR ratings let you pick a lower radiation phone."</div>
+    <div class="r"><b>What the record supports:</b> A published SAR value is one worst case maximum,
+    measured at full power in a specific configuration. Real exposure is dominated by closed loop power
+    control, which drops handset output a long way when the signal is good. So a phone with a lower
+    certified SAR used in a bad coverage area can deliver more exposure than a higher SAR phone sitting
+    next to a strong cell. The FCC has said directly that SAR values should not be used to compare
+    device safety.</div>
+  </div>
+
+  <div class="myth">
+    <div class="m">"Non ionizing means it cannot possibly have any biological effect."</div>
+    <div class="r"><b>What the record supports:</b> Non ionizing means it cannot break chemical bonds
+    directly. It obviously does have biological effects, because heating is a biological effect, and a
+    microwave oven is the proof of concept sitting in everybody's kitchen. The regulatory question is
+    whether effects happen below the thermal threshold once the safety factors are applied. That is
+    where the actual scientific disagreement lives. Saying "no effect is possible" is not a correct
+    statement of it, and it tends to make people trust the rest of what you said less.</div>
+  </div>
+
+  <div class="myth">
+    <div class="m">"You cannot measure any of this yourself."</div>
+    <div class="r"><b>What the record supports:</b> You can. Broadband RF field probes and calibrated
+    spectrum analyzers with isotropic antennas do exactly this, and OET Bulletin 65 lays out the
+    measurement procedure. Consumer grade meters are uncalibrated and frequency selective in ways that
+    do not help, so their absolute readings are not reliable. But the professional measurement path is
+    documented and it is available to anybody who wants a real number.</div>
+  </div>
+
+  <h3>How to look up any device yourself</h3>
+  <ol>
+    <li>Find the FCC ID on the device label, or in the settings for a phone.</li>
+    <li>Search it at <span class="mono">fcc.gov/oet/ea/fccid</span>.</li>
+    <li>Open the <b>RF Exposure</b> exhibit. For a portable device you will find SAR results per
+    band and configuration. For a mobile device you will find an MPE calculation and the separation
+    distance it supports.</li>
+    <li>Compare against the applicable limit: 1.6 W/kg over 1 g for SAR, or 1.0 mW/cm&sup2; general
+    population above 1500 MHz for MPE.</li>
+    <li>For access points, also read the vendor hardware installation guide, which restates the
+    separation distance in deployment terms.</li>
+  </ol>
+
+  <h3>Primary sources</h3>
+  <ul>
+    <li>47 CFR 1.1307, 1.1310, 2.1091, 2.1093, 15.407 (US rules, MPE and SAR limits, 6 GHz power)</li>
+    <li>FCC OET Bulletin 65 and Supplement C (evaluating compliance with RF exposure limits)</li>
+    <li>FCC Equipment Authorization Search, per device exhibits</li>
+    <li>ICNIRP Guidelines for Limiting Exposure to Electromagnetic Fields, 100 kHz to 300 GHz, 2020</li>
+    <li>IEEE C95.1-2019, safety levels with respect to human exposure to electric, magnetic, and
+    electromagnetic fields, 0 Hz to 300 GHz</li>
+    <li>Health Canada Safety Code 6 (2015); ISED RSS-102</li>
+    <li>IEC 62209-1528 (SAR measurement), IEC 62232 (base station exposure assessment)</li>
+    <li>IARC Monographs Volume 102 (2013), non ionizing radiation, part 2: radiofrequency
+    electromagnetic fields</li>
+    <li>NTP Technical Reports 595 and 596 (2018), cell phone radiofrequency radiation studies</li>
+    <li>Falcioni et al., Ramazzini Institute, Environmental Research (2018)</li>
+    <li>Baste V, Riise T, Moen BE. Radiofrequency electromagnetic fields, male infertility and sex
+    ratio of offspring. Eur J Epidemiol. 2008;23(5):369-77. PMID 18415687</li>
+    <li>M&oslash;llerl&oslash;kken OJ, Moen BE. Is fertility reduced among men exposed to
+    radiofrequency fields in the Norwegian Navy? Bioelectromagnetics. 2008;29(5):345-52. PMID 18240289</li>
+    <li>Tong SH, Liu YT, Liu Y. Paternal exposure to occupational electromagnetic radiation and sex
+    ratio of the offspring: a meta-analysis. Zhonghua Nan Ke Xue. 2013;19(2):153-8. PMID 23441458</li>
+    <li>Yan SW et al. Long-term exposure to low intensity microwave radiation affects male
+    reproductivity. Zhonghua Nan Ke Xue. 2007;13(4):306-8. PMID 17491260</li>
+    <li>Cordelli E et al. Effects of RF-EMF exposure on pregnancy and birth outcomes: a systematic
+    review of experimental studies on non-human mammals. Environ Int. 2023;180:108178. PMID 37729852
+    (WHO commissioned; PROSPERO CRD42021227746)</li>
+    <li>Goldsmith JR. Epidemiologic evidence of radiofrequency radiation (microwave) effects on health
+    in military, broadcasting, and occupational studies. Int J Occup Environ Health. 1995;1(1):47-57.
+    PMID 9990158 (author-stated positive reporting bias)</li>
+    <li>WHO fact sheets on electromagnetic fields and public health</li>
+    <li>21 CFR 1030.10 (microwave oven leakage performance standard)</li>
+    <li>Environmental Health Trust v. FCC, D.C. Circuit, 2021</li>
+  </ul>
+
+  <div class="card" style="border-top:4px solid var(--violet)">
+    <h4>Scope and limitations of this document</h4>
+    <p>This document explains measurement, regulation, and certification. It is not medical advice
+    and it is not offering a health risk estimate. The calculations use a free space far field model,
+    which is right for the geometries shown here and not valid inside the near field, so the
+    occupational near field entries on the perspective chart are order of magnitude illustrations
+    rather than assessments. The device table values are class level orientation pulled from regulatory
+    ceilings, not per model certified results, and per model numbers have to come from the FCC ID
+    exhibit or the vendor regulatory guide. Agency positions are summarized using the terms those
+    agencies used, and anybody quoting them should go read the original first. The personal account in
+    Part 1 is a personal account and is labeled that way on purpose.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  RF Exposure Engineering Reference, Edition 1.1 &middot; Written for wireless engineers, IT people,
+  and anybody who has a reason to ask &middot; Every calculation here can be reproduced from the
+  formulas in Part 2 &middot; Check any device specific number against its own FCC ID exhibit
+</footer>
+
+<button id="printbtn" onclick="window.print()">Save as PDF</button>
+
+<script>
+/* ---------------- nav ---------------- */
+var PARTS=[["s1","1. Summary"],["s2","2. Physics"],["s3","3. Regulators"],
+["s4","4. Devices"],["s5","5. AP Engineering"],["s6","6. Science"],["s7","7. Perspective"]];
+var nav=document.getElementById('nav');
+PARTS.forEach(function(p,i){
+  var b=document.createElement('button'); b.textContent=p[1]; b.dataset.t=p[0];
+  if(i===0)b.className='on';
+  b.onclick=function(){
+    document.querySelectorAll('nav button').forEach(function(x){x.classList.remove('on')});
+    document.querySelectorAll('main section').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on'); document.getElementById(p[0]).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(p[0]==='s2') drawInvSq(); if(p[0]==='s7') drawPerspective();
+  };
+  nav.appendChild(b);
+});
+
+/* ---------------- calculator ---------------- */
+var ids=['cP','cG','cD','cU'], el={};
+['cP','cG','cD','cU','cPv','cGv','cDv','cUv','cLim','cPre','rE','rEm','rS','rP','rM','rBar','rBadge']
+ .forEach(function(k){el[k]=document.getElementById(k)});
+
+function fmt(x){
+  if(x>=1) return x.toFixed(3);
+  if(x>=0.001) return x.toFixed(4);
+  return x.toExponential(2);
+}
+function calc(){
+  var P=+el.cP.value, G=+el.cG.value, d=+el.cD.value, u=+el.cU.value/100, lim=+el.cLim.value;
+  el.cPv.textContent=P.toFixed(1)+' dBm';
+  el.cGv.textContent=G.toFixed(1)+' dBi';
+  el.cDv.textContent=d+' cm';
+  el.cUv.textContent=(u*100).toFixed(0)+' percent';
+  var eirp=P+G, mW=Math.pow(10,eirp/10);
+  var S=mW*u/(4*Math.PI*d*d);
+  var pct=100*S/lim;
+  el.rE.textContent=eirp.toFixed(1)+' dBm';
+  el.rEm.textContent=(mW>=1000?(mW/1000).toFixed(2)+' W':mW.toFixed(0)+' mW');
+  el.rS.textContent=fmt(S);
+  el.rP.textContent=(pct<0.01?pct.toExponential(2):pct.toFixed(pct<1?3:1))+'%';
+  var marginDb=10*Math.log10(lim/S);
+  el.rM.textContent=(marginDb>=0?'margin '+marginDb.toFixed(1)+' dB under limit'
+                              :'EXCEEDS by '+(-marginDb).toFixed(1)+' dB');
+  var w=Math.max(1.5,Math.min(100,(Math.log10(Math.max(pct,1e-6))+4)/6*100));
+  el.rBar.style.width=w+'%';
+  var c = pct>100?'#c0392b' : pct>25?'#e08b3c' : pct>1?'#d9c02a' : '#4fbf8b';
+  el.rBar.style.background=c;
+  var b=el.rBadge, txt, bg;
+  if(pct>100){txt='OVER LIMIT at this distance';bg='#c0392b'}
+  else if(pct>25){txt='COMPLIANT, within 6 dB of the limit';bg='#c9871f'}
+  else if(pct>1){txt='COMPLIANT, large margin';bg='#2e7d5b'}
+  else {txt='COMPLIANT, under 1 percent of the limit';bg='#187f8a'}
+  b.textContent=txt; b.style.background=bg; b.style.color='#fff';
+}
+ids.forEach(function(k){el[k].addEventListener('input',function(){el.cPre.value='';calc()})});
+el.cLim.addEventListener('change',calc);
+el.cPre.addEventListener('change',function(){
+  if(!this.value)return;
+  var v=this.value.split(',');
+  el.cP.value=v[0]; el.cG.value=v[1]; el.cD.value=v[2]; el.cU.value=v[3]; calc();
+});
+calc();
+
+/* ---------------- inverse square chart ---------------- */
+function drawInvSq(){
+  var c=document.getElementById('invsq'), g=c.getContext('2d');
+  var W=c.width,H=c.height,L=70,R=20,T=20,B=46;
+  g.clearRect(0,0,W,H);
+  var d0=5,d1=500, s=function(d){return 1000/(4*Math.PI*d*d)};
+  var ymax=Math.log10(s(d0)), ymin=Math.log10(s(d1));
+  var X=function(d){return L+(Math.log10(d)-Math.log10(d0))/(Math.log10(d1)-Math.log10(d0))*(W-L-R)};
+  var Y=function(v){return T+(ymax-Math.log10(v))/(ymax-ymin)*(H-T-B)};
+  // grid
+  g.strokeStyle='#e6eaee'; g.fillStyle='#7b8b97'; g.font='11px ui-monospace,Menlo,monospace';
+  [1,0.1,0.01,0.001,0.0001].forEach(function(v){
+    if(Math.log10(v)>ymax||Math.log10(v)<ymin)return;
+    var y=Y(v); g.beginPath();g.moveTo(L,y);g.lineTo(W-R,y);g.stroke();
+    g.fillText(v>=0.001?String(v):v.toExponential(0),6,y+4);
+  });
+  [5,10,20,50,100,200,500].forEach(function(d){
+    var x=X(d); g.beginPath();g.moveTo(x,T);g.lineTo(x,H-B);g.stroke();
+    g.fillText(d+(d===5?' cm':''),x-10,H-B+18);
+  });
+  // limit line
+  g.strokeStyle='#c0392b'; g.setLineDash([6,4]); g.lineWidth=2;
+  g.beginPath();g.moveTo(L,Y(1));g.lineTo(W-R,Y(1));g.stroke();
+  g.setLineDash([]); g.fillStyle='#c0392b'; g.font='bold 12px ui-monospace,Menlo,monospace';
+  g.fillText('FCC general population limit 1.0 mW/cm2',L+10,Y(1)-8);
+  // curve
+  g.strokeStyle='#2b7fa8'; g.lineWidth=3; g.beginPath();
+  for(var d=d0;d<=d1;d*=1.02){var x=X(d),y=Y(s(d)); d===d0?g.moveTo(x,y):g.lineTo(x,y)}
+  g.stroke();
+  // fill under
+  g.lineTo(X(d1),H-B); g.lineTo(X(d0),H-B); g.closePath();
+  g.fillStyle='rgba(43,127,168,.12)'; g.fill();
+  // 20cm marker
+  var mx=X(20),my=Y(s(20));
+  g.fillStyle='#2e7d5b'; g.beginPath(); g.arc(mx,my,6,0,7); g.fill();
+  g.font='bold 12px ui-monospace,Menlo,monospace';
+  g.fillText('20 cm = 0.199 mW/cm2 = 19.9% of limit',mx+12,my-6);
+  g.fillStyle='#3d5566'; g.font='12px ui-monospace,Menlo,monospace';
+  g.fillText('distance from a 1 W (30 dBm) EIRP source, log scale',L,H-6);
+  g.save(); g.translate(16,H/2); g.rotate(-Math.PI/2);
+  g.fillText('mW/cm2',0,0); g.restore();
+}
+drawInvSq();
+
+/* ---------------- perspective chart ---------------- */
+var SCEN=[
+ ['Tactical jamming pod, near field, 1 m',  60, 10, 100, 'occupational, keep-out zones apply', 1],
+ ['Airborne radar main beam, 10 m',         57, 30, 1000, '', 0],
+ ['Shipboard HF aerial, within 10 m',       50, 6,  1000, '', 0],
+ ['Public safety portable radio at the head',37, 0,  2, '', 1],
+ ['Smartphone at the head, full power',  23, 0,  1.0, '', 1],
+ ['Laptop Wi-Fi, 6 GHz client, on a lap', 18, 2, 20, '', 0],
+ ['Bluetooth earbud, class 2',            4, 0,  2, '', 1],
+ ['Smartwatch radio at the wrist',       10, 0,  1, '', 1],
+ ['Baby monitor at 30 cm from a crib',   17, 2, 30],
+ ['Consumer router on a desk, 1 m',      20, 2, 100],
+ ['Indoor AP, 6 GHz LPI 80 MHz, at 20 cm',18,6, 20],
+ ['Ceiling AP at 2.5 m, worst case',     18, 6, 250],
+ ['Directional industrial radio, 3 m boresight',18,15,300],
+ ['Outdoor SP AP at 5 m',                21, 15, 500],
+ ['Cellular macro sector, 30 m, downtilted', 43, 17, 3000],
+ ['Microwave oven, FDA leakage limit at 5 cm', null,null,5, 'regulatory ceiling, 5 mW/cm2']
+];
+function drawPerspective(){
+  var c=document.getElementById('perspective'), g=c.getContext('2d');
+  var W=c.width,H=c.height,L=300,R=90,T=26,B=44;
+  g.clearRect(0,0,W,H);
+  var rows=SCEN.map(function(s){
+    var pct;
+    if(s[1]===null){ pct=500; } // 5 mW/cm2 vs 1 mW/cm2 general pop limit
+    else { var mW=Math.pow(10,(s[1]+s[2])/10); pct=100*(mW/(4*Math.PI*s[3]*s[3]))/1; }
+    return {name:s[0]+(s[5]?' *':''),pct:pct,note:s[4],nf:s[5]};
+  });
+  var lo=-4, hi=3; // log10 percent
+  var X=function(p){var v=Math.log10(Math.max(p,1e-4));
+    return L+(Math.min(Math.max(v,lo),hi)-lo)/(hi-lo)*(W-L-R)};
+  var bh=(H-T-B)/rows.length;
+  g.font='11px ui-monospace,Menlo,monospace';
+  // gridlines
+  [-4,-3,-2,-1,0,1,2,3].forEach(function(v){
+    var x=X(Math.pow(10,v));
+    g.strokeStyle= v===2?'#c0392b':'#e6eaee'; g.lineWidth= v===2?2:1;
+    if(v===2)g.setLineDash([5,4]);
+    g.beginPath();g.moveTo(x,T);g.lineTo(x,H-B);g.stroke(); g.setLineDash([]);
+    g.fillStyle= v===2?'#c0392b':'#7b8b97';
+    var lbl=Math.pow(10,v); g.fillText((lbl>=1?lbl:lbl.toFixed(Math.abs(v)))+'%',x-12,H-B+16);
+  });
+  g.fillStyle='#c0392b'; g.font='bold 11px ui-monospace,Menlo,monospace';
+  g.fillText('100% of limit',X(100)-40,T-10);
+  rows.forEach(function(r,i){
+    var y=T+i*bh+3, h=bh-8, x=X(r.pct);
+    var col = r.nf ? '#5b4b8a' : (r.pct>25?'#c0392b' : r.pct>1?'#c9871f' : '#2e7d5b');
+    g.fillStyle=col; g.fillRect(L,y,Math.max(x-L,2),h);
+    g.fillStyle='#12202b'; g.font='12px -apple-system,Helvetica,Arial,sans-serif';
+    g.textAlign='right'; g.fillText(r.name,L-10,y+h/2+4); g.textAlign='left';
+    g.fillStyle=col; g.font='bold 11px ui-monospace,Menlo,monospace';
+    var t=r.pct>=1?r.pct.toFixed(1)+'%':(r.pct>=0.01?r.pct.toFixed(3)+'%':r.pct.toExponential(1)+'%');
+    g.fillText(t,Math.max(x+6,L+6),y+h/2+4);
+  });
+  g.fillStyle='#3d5566'; g.font='12px ui-monospace,Menlo,monospace';
+  g.fillText('percent of FCC general population MPE limit, log scale, worst case',L,H-6);
+}
+drawPerspective();
+
+/* ---------------- device filter ---------------- */
+document.getElementById('q').addEventListener('input',function(){
+  var v=this.value.toLowerCase();
+  document.querySelectorAll('#dev tbody tr').forEach(function(tr){
+    tr.style.display = tr.textContent.toLowerCase().indexOf(v)>-1 ? '' : 'none';
+  });
+});
+
+/* ---------------- print: show everything ---------------- */
+window.addEventListener('beforeprint',function(){
+  document.querySelectorAll('main section').forEach(function(s){s.classList.add('on')});
+  drawInvSq(); drawPerspective();
+});
+</script>
+</body>
+</html>
