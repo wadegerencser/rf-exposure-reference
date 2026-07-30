@@ -36,7 +36,7 @@ the equipment changed. Because the distance changed, and the duration changed, a
 transmitters changed.
 
 Here is what the math says, using the same free space formula the FCC uses for this class of
-evaluation (United States, Federal Communications Commission, *OET Bulletin 65* 19-20), and using the
+evaluation (United States, Federal Communications Commission, *OET Bulletin 65* 19), and using the
 general population limit of 1.0 mW/cm2 for frequencies above 1500 MHz (United States, *47 CFR*
 1.1310).
 
@@ -70,7 +70,7 @@ what they are standing next to. If nobody ever told them, the assumption is not 
 
 And the free space formula stops being valid up close. Inside the near field, which for these
 frequencies is only a few centimeters, you cannot calculate it this way at all (United States, Federal
-Communications Commission, *OET Bulletin 65* 20-23). That is exactly why
+Communications Commission, *OET Bulletin 65* 29). That is exactly why
 devices used against the body get SAR tested in a phantom instead. So the 5 and 10 centimeter numbers
 should be read as an indication of scale and not as an assessment.
 

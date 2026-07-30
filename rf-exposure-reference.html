@@ -332,7 +332,7 @@ footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; c
   <p>The arithmetic is not complicated. Free space power density from an isotropically equivalent
   source is <span class="mono">S = P<sub>EIRP</sub> / (4&pi;d&sup2;)</span>. This is the relationship
   the FCC bulletin uses for predicting exposure from this class of source (United States, Federal
-  Communications Commission, <i>OET Bulletin 65</i> 19-20). For 1 W (30 dBm) EIRP at 20 cm it works out
+  Communications Commission, <i>OET Bulletin 65</i> 19). For 1 W (30 dBm) EIRP at 20 cm it works out
   like this.</p>
   <div class="card mono">
 S = 1000 mW / (4&pi; &times; 20&sup2; cm&sup2;)<br>
@@ -366,13 +366,13 @@ Result = 19.9 percent of the limit, before any duty cycle credit.
   <p>An RF source puts out coupled electric (E, volts per meter) and magnetic (H, amperes per meter)
   fields. Far enough away from the antenna those settle into a plane wave, and the power density is
   <span class="mono">S = E&sup2; / 377</span> W/m&sup2;, where 377 ohms is the impedance of free
-  space (United States, Federal Communications Commission, <i>OET Bulletin 65</i> 18). Close to the antenna, E and H are not in that fixed ratio. That is why near field measurement
+  space (United States, Federal Communications Commission, <i>OET Bulletin 65</i> 9). Close to the antenna, E and H are not in that fixed ratio. That is why near field measurement
   means probing both of them, or measuring the absorbed energy directly instead.</p>
 
   <h3>Near field versus far field</h3>
   <p>The boundary that matters when picking a test method is roughly
   <span class="mono">d = 2D&sup2; / &lambda;</span>, where D is the largest dimension of the aperture
-  (United States, Federal Communications Commission, <i>OET Bulletin 65</i> 20-23).
+  (United States, Federal Communications Commission, <i>OET Bulletin 65</i> 29).
   For a small handset antenna at 2.4 GHz the far field starts within a few centimeters, so the head
   is sitting inside the reactive and radiating near field. In there, the field structure depends on
   the tissue being present at all. The tissue loads the antenna. That coupling is the reason SAR has
@@ -452,7 +452,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   <p>MPE is the limit on field strength or power density in air, not in tissue. The limit changes
   with frequency, because whole body absorption peaks somewhere around 30 to 300 MHz where the human
   body is roughly resonant (United States, Federal Communications Commission, <i>OET Bulletin 65</i>
-  9-11). That resonance region is where a lot of military and public safety
+  app. A, table 1). That resonance region is where a lot of military and public safety
   equipment operates, which is not a coincidence worth ignoring.</p>
   <table>
     <thead><tr><th>Frequency range</th><th class="num">General population / uncontrolled</th><th class="num">Occupational / controlled</th><th class="num">Averaging time</th></tr></thead>
@@ -1015,7 +1015,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     <div class="r"><b>What the record supports:</b> You can. Broadband RF field probes and calibrated
     spectrum analyzers with isotropic antennas do exactly this, and the FCC bulletin lays out the
     measurement procedure (United States, Federal Communications Commission, <i>OET Bulletin 65</i>
-    35-46). Consumer grade meters are uncalibrated and frequency selective in ways that
+    45-51). Consumer grade meters are uncalibrated and frequency selective in ways that
     do not help, so their absolute readings are not reliable. But the professional measurement path is
     documented and it is available to anybody who wants a real number.</div>
   </div>
@@ -1103,7 +1103,8 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
 
     <p>United States. Federal Communications Commission. <i>Evaluating Compliance with FCC Guidelines
     for Human Exposure to Radiofrequency Electromagnetic Fields</i>. OET Bulletin 65, Edition 97-01,
-    FCC Office of Engineering and Technology, 1997.</p>
+    FCC Office of Engineering and Technology, Aug. 1997,
+    transition.fcc.gov/Bureaus/Engineering_Technology/Documents/bulletins/oet65/oet65.pdf.</p>
 
     <p>United States. Federal Communications Commission. "Equipment Authorization Search."
     <i>FCC.gov</i>, www.fcc.gov/oet/ea/fccid.</p>
