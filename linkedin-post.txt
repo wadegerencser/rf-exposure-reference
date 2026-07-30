@@ -1,0 +1,33 @@
+A 36 dBm access point reaches the FCC general population exposure limit at about 18 centimeters. That is a hand's width.
+
+Careful with that number, because it is not a warning about your office Wi-Fi. It is the opposite. That same radio on a ceiling 2.5 m up runs at roughly a tenth of one percent of the limit, before any credit for Wi-Fi being bursty and idle. Not a close call.
+
+But the reassuring numbers everybody quotes describe normal use at normal distances. That is not the only way people end up around this gear.
+
+Somebody has to stage the gear. I have been in rooms where thirty access points sit on folding tables, all powered up, all beaconing, while people work the list for hours. I have seen bench radios at arm's length driven to full power because the test called for it. Lab gear gets handled at 30 centimeters, not 2 meters, and all day.
+
+Using the same free space method the FCC uses, as a percent of the general population limit:
+
+One AP at 30 dBm EIRP, 2.5 m ceiling: 0.13 percent
+Same AP at 50 cm on a bench: 3.2 percent
+Eight of them at 50 cm, all transmitting: 25 percent
+A 36 dBm EIRP radio at 20 cm: 79 percent
+Same radio at 10 cm: 317 percent
+
+The caveats are real. Those bench figures assume 100 percent duty cycle, which no Wi-Fi radio does, so knock off a factor of ten for real staging. And the formula is invalid in the near field, so the 10 centimeter row indicates scale, not compliance.
+
+That occupational limit is five times more permissive, and not because workers are tougher. The framework assumes they are trained, informed, and able to control their own exposure. If nobody ever showed them the numbers, that assumption is not being met.
+
+I did not come into RF through Wi-Fi. I came into it through the Marine Corps, working on the EA-6B Prowler, an electronic countermeasures aircraft whose job was radiating high power RF to blind a radar environment.
+
+Something noticed across the four Marine Corps Prowler squadrons was that the kids of the pilots and aircrew were almost all girls. Almost every family. That is an observation from inside a community, not a study. Small groups come out lopsided by chance. I am not presenting it as proof.
+
+But I went looking at the literature expecting nothing. A study of 10,497 men in the Royal Norwegian Navy reported a dose related rise in infertility and a trend toward fewer boys as reported exposure to high frequency aerials went up. A later meta analysis found no association. Neither settles it. And no study of aircrew on electronic warfare platforms appears to exist. That is not evidence of safety. It means nobody looked.
+
+So I built a reference. The physics, the regulations, device comparisons, a live calculator, and the studies with their limitations stated plainly. All of it cited.
+
+https://wadegerencser.github.io/rf-exposure-reference/
+
+If you stage APs or work a test bench, I would like to hear how you think about this.
+
+#WirelessEngineering #RFSafety #CWNP
