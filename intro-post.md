@@ -5,6 +5,14 @@ phone is dangerous or that the access point over the conference room table is do
 The arithmetic does not support that, and I am not interested in making a claim the numbers do not
 back.
 
+Before I go further I want to be clear about what is mine here and what is not. I am a wireless
+engineer. I am not a physicist, a health scientist, or a regulatory attorney. The math, the FCC limits
+and procedures, and every study I mention were researched and they belong to the people and agencies
+who produced them. Those are cited in the text and listed at the bottom. What is mine is the
+arrangement, the worked examples, the field experience, and the concern. I would rather over cite this
+than have anybody think I am passing off someone else's work as my own, and I would rather you go read
+the originals than take my summary on faith.
+
 What I am interested in is a narrower thing that does not get brought up much. Almost every
 reassuring statement about RF exposure is a statement about normal use at normal distances. A ceiling
 mounted access point two and a half meters over somebody's head is running at something like a tenth
@@ -28,7 +36,9 @@ the equipment changed. Because the distance changed, and the duration changed, a
 transmitters changed.
 
 Here is what the math says, using the same free space formula the FCC uses for this class of
-evaluation, and using the general population limit of 1.0 mW/cm2 for frequencies above 1500 MHz.
+evaluation (United States, Federal Communications Commission, *OET Bulletin 65* 19-20), and using the
+general population limit of 1.0 mW/cm2 for frequencies above 1500 MHz (United States, *47 CFR*
+1.1310).
 
 | Situation | Percent of general population limit |
 |---|---|
@@ -52,13 +62,15 @@ at a realistic 10 percent duty cycle is about 2.5 percent of the limit, not 25. 
 doing a lot of quiet work in your favor.
 
 Those numbers also use the general population limit. Somebody working around transmitters as part of
-their job may fall under the occupational limit instead, which is five times higher, on the
-assumption that they are trained, informed, and can control their own exposure. That assumption is
+their job may fall under the occupational limit instead, which is five times higher (United States,
+*47 CFR* 1.1310), on the assumption that they are trained, informed, and can control their own
+exposure. That assumption is
 the part worth pausing on. It is not a claim that workers are tougher. It is a claim that they know
 what they are standing next to. If nobody ever told them, the assumption is not being met.
 
 And the free space formula stops being valid up close. Inside the near field, which for these
-frequencies is only a few centimeters, you cannot calculate it this way at all. That is exactly why
+frequencies is only a few centimeters, you cannot calculate it this way at all (United States, Federal
+Communications Commission, *OET Bulletin 65* 20-23). That is exactly why
 devices used against the body get SAR tested in a phantom instead. So the 5 and 10 centimeter numbers
 should be read as an indication of scale and not as an assessment.
 
@@ -83,10 +95,10 @@ it forward as proof of anything and it is not meant as a sting at anybody. It ju
 So I went and looked at what has actually been published on that specific question, expecting to find
 nothing. That is not what I found. A cross sectional study of 10,497 men in the Royal Norwegian Navy
 reported a dose related increase in infertility and a significant trend toward fewer boys as reported
-exposure to high frequency aerials went up. A meta analysis published later pooled the wider
-occupational literature and found no association with sex ratio at all. Both of those are published.
-Neither one settles it. The citations are in the reference, along with the animal work and where its
-dose levels actually sit.
+exposure to high frequency aerials went up (Baste et al. 369-77). A meta analysis published later
+pooled the wider occupational literature and found no association with sex ratio at all (Tong et al.
+153-58). Both of those are published. Neither one settles it. The citations are in the reference, along
+with the animal work and where its dose levels actually sit.
 
 What does not exist, as far as I can tell from searching the indexed literature, is any study of
 aircrew on tactical electronic warfare platforms. Not a reassuring one and not an alarming one. Just
@@ -126,3 +138,24 @@ https://wadegerencser.github.io/rf-exposure-reference/
 
 Run your own scenario in the calculator rather than taking my word for any of it. That is sort of the
 point.
+
+## Works Cited
+
+Baste, Valborg, Trond Riise, and Bente E. Moen. "Radiofrequency Electromagnetic Fields; Male
+Infertility and Sex Ratio of Offspring." *European Journal of Epidemiology*, vol. 23, no. 5, 2008,
+pp. 369-77. PubMed, PMID 18415687.
+
+Tong, Shu-Hui, Yan-Ting Liu, and Yi Liu. "Paternal Exposure to Occupational Electromagnetic Radiation
+and Sex Ratio of the Offspring: A Meta-Analysis." *National Journal of Andrology*, vol. 19, no. 2,
+2013, pp. 153-58. PubMed, PMID 23441458.
+
+United States. *Code of Federal Regulations*. Title 47, sections 1.1310, 2.1091, 2.1093, and 15.407.
+Office of the Federal Register.
+
+United States. Federal Communications Commission. *Evaluating Compliance with FCC Guidelines for Human
+Exposure to Radiofrequency Electromagnetic Fields*. OET Bulletin 65, Edition 97-01, FCC Office of
+Engineering and Technology, 1997.
+
+A full Works Cited, including the ICNIRP guidelines, IEEE C95.1-2019, Health Canada Safety Code 6, the
+IARC monograph, the NTP technical reports, and the rest of the reproductive literature, appears at the
+end of the reference itself.

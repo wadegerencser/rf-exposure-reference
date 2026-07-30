@@ -116,6 +116,10 @@ canvas{max-width:100%}
 .legend{display:flex; flex-wrap:wrap; gap:14px; font-size:12px; font-family:var(--mono); margin-top:8px; color:var(--ink2)}
 .legend i{display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:5px; vertical-align:-1px}
 
+.wcited{background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 26px; margin:16px 0}
+.wcited p{padding-left:2.2em; text-indent:-2.2em; margin:0 0 12px; font-size:14.5px; line-height:1.55}
+.wcited p:last-child{margin-bottom:0}
+
 #q{width:100%; padding:11px 14px; font-size:15px; border:1px solid var(--line); border-radius:10px; font-family:var(--mono)}
 
 .myth{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:14px 0; background:#fff}
@@ -134,6 +138,8 @@ footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; c
   section:first-of-type{break-before:auto; page-break-before:auto}
   .card,.note,.warn,.key,.myth,.chartwrap,table{break-inside:avoid; page-break-inside:avoid;
     box-shadow:none}
+  .wcited{border:0; padding:0}
+  .wcited p{break-inside:avoid; page-break-inside:avoid}
   .cover{padding:40px 30px; break-after:page; page-break-after:always}
   h2{break-after:avoid; break-inside:avoid}
   h3,h4{break-after:avoid}
@@ -173,6 +179,25 @@ footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; c
 <!-- ===================== PART 1 ===================== -->
 <section id="s1" class="on">
   <h2><span class="n">Part 1</span>Executive Summary</h2>
+
+  <div class="note">
+    <b>A note on sourcing, and on what is mine.</b> I need to be straightforward about this. I am a
+    wireless engineer, not a physicist, a health scientist, or a regulatory attorney. The parts of this
+    document that carry real weight, the logarithmic and power density math, the FCC test procedures
+    and the mobile versus portable rules, the SAR and MPE limits, the exposure guidelines, and every
+    health finding, are not my original work. They were researched, and they come from the agencies,
+    standards bodies, and researchers who actually produced them. Those are cited in the text with
+    parenthetical references, and the full entries are in the Works Cited in Part 7.
+    <br><br>
+    What is mine is the arrangement, the worked examples, the deployment experience, and the personal
+    account. Where the writing is mine and uncited, it is opinion or experience and should be read that
+    way. Where a number, a limit, a procedure, or a finding appears, it is cited, because I did not
+    derive it and it would not be honest to present it as though I had. Citations are used here
+    frequently and on purpose, both to keep the document accurate and to avoid presenting anyone else's
+    work as my own. The intent is to use what these organizations and researchers published as the
+    North Star and to point the reader back to the original rather than asking them to trust my
+    summary of it.
+  </div>
 
   <div class="card" style="border-top:5px solid var(--sun)">
     <h4 style="color:var(--sun);margin-top:0">Why this document exists</h4>
@@ -241,7 +266,10 @@ footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; c
   photon does. The interaction that is established at these frequencies is dielectric heating.
   Oscillating fields push water molecules and ions around, and the friction turns field energy into
   heat. Every numeric exposure limit in force today traces back, with safety factors applied, to the
-  point where measurable heating starts.</p>
+  point where measurable heating starts. The thermal basis for the limits, and the safety factors
+  applied to it, are set out in the international guidelines and the IEEE consensus standard
+  (International Commission on Non-Ionizing Radiation Protection 486-88; Institute of Electrical and
+  Electronics Engineers).</p>
 
   <div class="key">
     <b>This is the most important distinction in the document.</b> Regulators use two completely
@@ -250,7 +278,8 @@ footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; c
     Under about 20 cm, the device is a <b>portable</b> device and is tested for
     <b>SAR</b> (specific absorption rate, W/kg absorbed in tissue). At or beyond 20 cm it is a
     <b>mobile</b> device and is evaluated for <b>MPE</b> (maximum permissible exposure, power density
-    in mW/cm&sup2; in air). A phone gets a SAR number. A ceiling access point gets an MPE
+    in mW/cm&sup2; in air). These two categories and the 20 cm boundary between them are defined in the
+    federal rules (United States, <i>47 CFR</i> 2.1091, 2.1093). A phone gets a SAR number. A ceiling access point gets an MPE
     separation distance. Comparing a phone SAR value against an AP separation distance is comparing two
  different quantities, measured in different units, by different procedures. It does not mean
  anything.
@@ -269,7 +298,8 @@ footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; c
     spatial streams. Compliance gets evaluated on total radiated power. Antenna count is not the
     thing being measured.</li>
     <li><b>"Certification proves the device is safe."</b> Certification proves the device met a
-    numeric limit under a defined worst case test. That is a compliance claim and not a biology
+    numeric limit under a defined worst case test, following the evaluation procedures in the FCC
+    bulletin (United States, Federal Communications Commission, <i>OET Bulletin 65</i>). That is a compliance claim and not a biology
     claim. The biology sits in the health agency literature, which is handled separately in Part 6.
     This distinction gets blurred constantly, usually by people quoting certification as if it
     settled a health question.</li>
@@ -288,18 +318,22 @@ footer{border-top:1px solid var(--line); padding:26px 20px; text-align:center; c
     away. The near field has to be measured in a tissue simulant. The far field can be calculated.</li>
     <li><b>Power control behavior.</b> Cellular handsets run closed loop power control against a
     base station, so they transmit at whatever level holds the link together, up to somewhere around
-    23 to 24 dBm conducted. Wi-Fi access points transmit at a configured level that is set by
+    23 to 24 dBm conducted. The FCC has stated that because of this, published SAR values should not be
+    used to compare devices against each other (United States, Federal Communications Commission,
+    "Radio Frequency Safety"). Wi-Fi access points transmit at a configured level that is set by
     regulatory domain and channel width.</li>
     <li><b>Duty cycle.</b> Wi-Fi is contention based and bursty. Even a saturated enterprise AP is
     only transmitting a fraction of the time on a given radio, and the exposure limits are time
-    averaged over 30 minutes for the general population. Averaging rewards a low duty cycle heavily.
+    averaged over 30 minutes for the general population (United States, <i>47 CFR</i> 1.1310). Averaging rewards a low duty cycle heavily.
     This is also where a jammer differs the most from Wi-Fi, since a jammer is designed to be on.</li>
   </ol>
 
   <h3>What 20 cm actually means</h3>
   <p>The arithmetic is not complicated. Free space power density from an isotropically equivalent
-  source is <span class="mono">S = P<sub>EIRP</sub> / (4&pi;d&sup2;)</span>. For 1 W (30 dBm) EIRP at
-  20 cm it works out like this.</p>
+  source is <span class="mono">S = P<sub>EIRP</sub> / (4&pi;d&sup2;)</span>. This is the relationship
+  the FCC bulletin uses for predicting exposure from this class of source (United States, Federal
+  Communications Commission, <i>OET Bulletin 65</i> 19-20). For 1 W (30 dBm) EIRP at 20 cm it works out
+  like this.</p>
   <div class="card mono">
 S = 1000 mW / (4&pi; &times; 20&sup2; cm&sup2;)<br>
 S = 1000 / 5026.5<br>
@@ -319,7 +353,8 @@ Result = 19.9 percent of the limit, before any duty cycle credit.
     <b>How to read this.</b> Part 2 is the physics and the live calculator. Part 3 is who regulates
     what. Part 4 is the device table. Part 5 is access point engineering. Part 6 is the health
     literature, including the reproductive studies, with agency positions written the way those
-    agencies wrote them. Part 7 goes through claims that get made publicly, in both directions.
+    agencies wrote them. Part 7 goes through claims that get made publicly, in both directions, and ends with the Works
+ Cited.
   </div>
 </section>
 
@@ -331,12 +366,13 @@ Result = 19.9 percent of the limit, before any duty cycle credit.
   <p>An RF source puts out coupled electric (E, volts per meter) and magnetic (H, amperes per meter)
   fields. Far enough away from the antenna those settle into a plane wave, and the power density is
   <span class="mono">S = E&sup2; / 377</span> W/m&sup2;, where 377 ohms is the impedance of free
-  space. Close to the antenna, E and H are not in that fixed ratio. That is why near field measurement
+  space (United States, Federal Communications Commission, <i>OET Bulletin 65</i> 18). Close to the antenna, E and H are not in that fixed ratio. That is why near field measurement
   means probing both of them, or measuring the absorbed energy directly instead.</p>
 
   <h3>Near field versus far field</h3>
   <p>The boundary that matters when picking a test method is roughly
-  <span class="mono">d = 2D&sup2; / &lambda;</span>, where D is the largest dimension of the aperture.
+  <span class="mono">d = 2D&sup2; / &lambda;</span>, where D is the largest dimension of the aperture
+  (United States, Federal Communications Commission, <i>OET Bulletin 65</i> 20-23).
   For a small handset antenna at 2.4 GHz the far field starts within a few centimeters, so the head
   is sitting inside the reactive and radiating near field. In there, the field structure depends on
   the tissue being present at all. The tissue loads the antenna. That coupling is the reason SAR has
@@ -396,16 +432,18 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   measured by scanning an electric field probe through a liquid tissue simulant inside a phantom
   shaped like a body part, with the device transmitting at maximum power on each band and mode, then
   computing <span class="mono">SAR = &sigma;E&sup2; / &rho;</span> over whatever averaging mass the
-  rules require.</p>
+  rules require. The measurement procedure itself is standardized so results are reproducible between
+  labs (International Electrotechnical Commission).</p>
   <ul>
     <li><b>FCC and Health Canada:</b> 1.6 W/kg averaged over 1 gram of tissue, general population,
-    partial body.</li>
+    partial body (United States, <i>47 CFR</i> 2.1093; Canada, Health Canada).</li>
     <li><b>ICNIRP 1998 and 2020, and most of Europe:</b> 2.0 W/kg averaged over 10 grams, head and
-    trunk, general public.</li>
+    trunk, general public (International Commission on Non-Ionizing Radiation Protection 494).</li>
     <li>The two are not directly comparable. A smaller averaging mass captures a sharper local peak,
     so the numerically lower 1 g limit is generally the more conservative of the two.</li>
     <li>Both of them come from a whole body threshold near 4 W/kg where a thermal effect becomes
-    measurable, reduced by a factor of 50 for the general public and 10 for occupational exposure.
+    measurable, reduced by a factor of 50 for the general public and 10 for occupational exposure
+    (International Commission on Non-Ionizing Radiation Protection 486-88).
     Worth noticing: the occupational safety factor is five times smaller than the public one. Workers
     are allowed more exposure on the assumption they are trained, monitored, and informed.</li>
   </ul>
@@ -413,7 +451,8 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   <h3>MPE, maximum permissible exposure</h3>
   <p>MPE is the limit on field strength or power density in air, not in tissue. The limit changes
   with frequency, because whole body absorption peaks somewhere around 30 to 300 MHz where the human
-  body is roughly resonant. That resonance region is where a lot of military and public safety
+  body is roughly resonant (United States, Federal Communications Commission, <i>OET Bulletin 65</i>
+  9-11). That resonance region is where a lot of military and public safety
   equipment operates, which is not a coincidence worth ignoring.</p>
   <table>
     <thead><tr><th>Frequency range</th><th class="num">General population / uncontrolled</th><th class="num">Occupational / controlled</th><th class="num">Averaging time</th></tr></thead>
@@ -423,8 +462,9 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
       <tr><td>1500 to 100000 MHz</td><td class="num">1.0 mW/cm&sup2;</td><td class="num">5.0 mW/cm&sup2;</td><td class="num">30 min / 6 min</td></tr>
     </tbody>
   </table>
-  <p>Every Wi-Fi band in use, 2.4 GHz, 5 GHz, and 6 GHz, falls in the top row, so 1.0 mW/cm&sup2; is
-  the number that governs access point evaluations for the general public. The averaging times are
+  <p>The limits in the table above are the ones codified in the federal rules (United States,
+  <i>47 CFR</i> 1.1310). Every Wi-Fi band in use, 2.4 GHz, 5 GHz, and 6 GHz, falls in the top row, so
+  1.0 mW/cm&sup2; is the number that governs access point evaluations for the general public. The averaging times are
   worth noticing too. The general population limit is a 30 minute average and the occupational limit
   is a 6 minute average. Instantaneous peaks above the limit are allowed as long as the average
   complies, which is a detail that matters a lot for pulsed sources like radar.</p>
@@ -630,8 +670,8 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   limit before any duty cycle credit is applied. Mount geometry is doing most of the work here.</p>
 
   <h3>The 6 GHz power regimes, and why they change the exposure conversation</h3>
-  <p>Under 47 CFR 15.407 the 6 GHz band uses power spectral density limits instead of one single EIRP
-  ceiling. Total EIRP is <span class="mono">PSD limit + 10&times;log10(channel width in MHz)</span>,
+  <p>Under the 6 GHz rules the band uses power spectral density limits instead of one single EIRP
+  ceiling (United States, <i>47 CFR</i> 15.407). Total EIRP is <span class="mono">PSD limit + 10&times;log10(channel width in MHz)</span>,
   capped by an EIRP ceiling, and whichever one binds first is the real limit.</p>
   <table>
     <thead><tr><th>Regime</th><th class="num">AP EIRP / PSD</th><th class="num">Client EIRP / PSD</th><th>Where</th><th>Coordination</th></tr></thead>
@@ -669,7 +709,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     <li><b>DFS.</b> Dynamic frequency selection protects radar in 5 GHz UNII-2. It is a spectrum
     sharing requirement, unrelated to human exposure, and frequently confused with it.</li>
     <li><b>AFC on 6 GHz.</b> Automated frequency coordination protects incumbent fixed links by
-    granting channel and power per location. It can authorize less than the 36 dBm ceiling, and the
+    granting channel and power per location (United States, <i>47 CFR</i> 15.407). It can authorize less than the 36 dBm ceiling, and the
     client cap tracks 6 dB below the authorized level.</li>
     <li><b>RRM and transmit power control.</b> Automatic power control means the real EIRP is usually
     well below the configured maximum. Compliance assessments assume the maximum anyway.</li>
@@ -728,7 +768,9 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
 
   <h3>Reproductive outcomes and offspring sex ratio</h3>
   <p>This is the question that got me to write this. It is covered in full here because it is where
-  the occupational literature and the consumer literature separate the most. It is also an area where
+  the occupational literature and the consumer literature separate the most. Every study in the table
+  below is listed in full in the Works Cited, and the summaries are drawn from the published abstracts
+  rather than from my reading of the full texts, which is worth stating plainly. It is also an area where
   the published results disagree with each other, and that is a different situation than there being
   no evidence at all. When somebody says there is nothing there, that is not accurate.</p>
 
@@ -736,7 +778,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     <thead><tr><th>Study</th><th>Population and exposure</th><th>Finding</th></tr></thead>
     <tbody>
       <tr>
-        <td><b>Baste, Riise, Moen (2008)</b><br>Eur J Epidemiol 23(5):369-77<br>PMID 18415687</td>
+        <td><b>Baste, Riise, and Moen</b> (2008)<br>PMID 18415687</td>
         <td>Cross sectional, 10,497 male respondents, Royal Norwegian Navy. 22 percent had worked
         close to high frequency aerials to a high or very high degree. Self reported exposure.</td>
         <td>Infertility rose significantly with increasing reported exposure. Odds ratio 1.86
@@ -746,7 +788,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
         exposure, for both high frequency aerials and communication equipment.</td>
       </tr>
       <tr>
-        <td><b>M&oslash;llerl&oslash;kken and Moen (2008)</b><br>Bioelectromagnetics 29(5):345-52<br>PMID 18240289</td>
+        <td><b>M&oslash;llerl&oslash;kken and Moen</b> (2008)<br>PMID 18240289</td>
         <td>Cross sectional, 1,487 Norwegian Navy men, 63 percent response. Work categories rated for
         EMF exposure by an expert group.</td>
         <td>Increased risk of infertility in tele/communication (OR 1.72, CI 1.04 to 2.85) and
@@ -754,7 +796,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
         state results must be interpreted with caution.</td>
       </tr>
       <tr>
-        <td><b>Tong, Liu, Liu (2013)</b><br>Zhonghua Nan Ke Xue 19(2):153-8<br>PMID 23441458</td>
+        <td><b>Tong, Liu, and Liu</b> (2013)<br>PMID 23441458</td>
         <td>Meta analysis of paternal occupational electromagnetic radiation exposure and offspring
         sex ratio, pooling PubMed, Embase, Cochrane, OVID, BIOSIS, and Chinese databases.</td>
         <td><b>No association.</b> Pooled OR 1.00 (95 percent CI 0.95 to 1.05, p = 0.875). Subgroup
@@ -762,7 +804,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
         Conclusion stated as no correlation.</td>
       </tr>
       <tr>
-        <td><b>Yan et al. (2007)</b><br>Zhonghua Nan Ke Xue 13(4):306-8<br>PMID 17491260</td>
+        <td><b>Yan et al.</b> (2007)<br>PMID 17491260</td>
         <td>289 married male radar operators versus 148 unexposed controls, long term low intensity
         microwave exposure, questionnaire plus field intensity measurement.</td>
         <td>Sexual dysfunction 43.6 percent in the radar group versus 24.4 percent in controls
@@ -770,7 +812,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
         (p &lt; 0.01).</td>
       </tr>
       <tr>
-        <td><b>Cordelli et al. (2023)</b><br>Environ Int 180:108178<br>PMID 37729852</td>
+        <td><b>Cordelli et al.</b> (2023)<br>PMID 37729852</td>
         <td>WHO commissioned systematic review and meta analysis, 88 papers, in utero RF exposure in
         non human mammals. Protocol PROSPERO CRD42021227746.</td>
         <td>High certainty for <b>no</b> effect on litter size. Moderate certainty for a small
@@ -782,7 +824,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
         prespecified endpoint in the review protocol.</td>
       </tr>
       <tr>
-        <td><b>Goldsmith (1995)</b><br>Int J Occup Environ Health 1(1):47-57<br>PMID 9990158</td>
+        <td><b>Goldsmith</b> (1995)<br>PMID 9990158</td>
         <td>Opinion review of military, broadcast, and occupational RF exposure, including Polish
         soldiers, US naval radar personnel from Korea, Skrunda transmitter, and US embassy staff in
         Eastern Europe.</td>
@@ -827,11 +869,11 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   <table>
     <thead><tr><th>Source</th><th>Position, as stated</th></tr></thead>
     <tbody>
-      <tr><td><b>WHO</b>, EMF fact sheets</td><td>No adverse health effects have been established as being caused by mobile phone use at levels below international exposure guidelines. WHO states research is continuing and coordinates further study.</td></tr>
+      <tr><td><b>WHO</b>, EMF fact sheets</td><td>No adverse health effects have been established as being caused by mobile phone use at levels below international exposure guidelines. WHO states research is continuing and coordinates further study (World Health Organization).</td></tr>
       <tr><td><b>IARC</b>, Monograph Vol. 102, 2013</td><td>Radiofrequency electromagnetic fields classified <b>Group 2B, possibly carcinogenic to humans</b>, based on limited evidence in humans for glioma and acoustic neuroma from heavy mobile phone use. Group 2B is the category for limited evidence; it indicates a hazard cannot be ruled out, not that risk has been quantified.</td></tr>
       <tr><td><b>US FDA</b>, review of published literature</td><td>The available scientific evidence does not show that any health problems are associated with using wireless devices at exposure levels within current limits. FDA has stated that the totality of the evidence does not support adverse health effects in humans from RF exposure at those levels.</td></tr>
       <tr><td><b>NTP</b>, National Toxicology Program, 2018 final reports</td><td>Found <b>clear evidence</b> of malignant schwannoma in the hearts of male rats exposed to high level GSM and CDMA modulated RF for 9 hours per day over two years, with equivocal or no findings in female rats and mice. Exposure levels reached and exceeded whole body SAR values well above consumer device limits, and rats in the highest groups showed measurable body temperature increases.</td></tr>
-      <tr><td><b>Ramazzini Institute</b>, 2018</td><td>Reported an increase in heart schwannoma in male rats from far field 1.8 GHz base station like exposure at levels below FCC and ICNIRP limits. Authors described the finding as consistent in tumor type with NTP. Study design, statistical power, and historical control comparisons have been debated in the literature.</td></tr>
+      <tr><td><b>Ramazzini Institute</b>, 2018 (Falcioni et al.)</td><td>Reported an increase in heart schwannoma in male rats from far field 1.8 GHz base station like exposure at levels below FCC and ICNIRP limits. Authors described the finding as consistent in tumor type with NTP. Study design, statistical power, and historical control comparisons have been debated in the literature.</td></tr>
       <tr><td><b>ICNIRP</b>, 2020 guidelines and NTP commentary</td><td>Concluded the NTP and Ramazzini results do not provide a basis for revising exposure limits, citing dose levels, thermal confounding, and inconsistency across species and sexes. ICNIRP 2020 nonetheless added new restrictions for frequencies above 6 GHz and for brief high intensity exposures.</td></tr>
       <tr><td><b>IEEE C95.1-2019</b></td><td>Consensus standard substantially harmonized with ICNIRP 2020, reaffirming thermal basis with safety factors and adding refinements for short duration and higher frequency exposure.</td></tr>
       <tr><td><b>FCC</b>, 2019 Resolution of Notice of Inquiry</td><td>Declined to change existing RF exposure limits, stating no evidence in the record established that the limits are inadequate. The decision was challenged and in 2021 the D.C. Circuit remanded, finding the FCC had not adequately explained its treatment of evidence in the record, particularly regarding non cancer effects and children.</td></tr>
@@ -844,12 +886,13 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   usually skip the dosimetry when they cite it. Here are the relevant facts.</p>
   <ul>
     <li>The exposure was whole body, continuous across 9 hour daily cycles, for the animals' whole
-    lifetime. Consumer device SAR limits describe localized intermittent peaks in a small mass of
+    lifetime (United States, National Toxicology Program). Consumer device SAR limits describe localized intermittent peaks in a small mass of
     tissue. Those are not the same exposure.</li>
     <li>The highest exposure groups had measurable core temperature increases, so thermal confounding
     cannot be ruled out at those levels.</li>
     <li>The findings were not consistent across sex and species, and exposed male rats in some groups
-    actually lived longer than the controls, which makes interpretation harder.</li>
+    actually lived longer than the controls, which makes interpretation harder (United States, National
+    Toxicology Program).</li>
     <li>None of that makes the finding meaningless. It means the finding does not translate straight
     into a human risk estimate at compliant exposure levels. NTP said that itself.</li>
   </ul>
@@ -860,8 +903,8 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     established adverse effects at compliant exposure. At the same time, some animal findings are
     still unexplained, the exposure environment has changed faster than the epidemiological record can
     keep up with, the occupational literature on high power sources is thinner than the consumer
-    literature, and a federal appeals court told the FCC that its 2019 explanation was not good
-    enough. All of that is true at once. Anybody who tells you it reduces to one clean sentence is
+    literature, and a federal appeals court told the FCC that its 2019 explanation was not good enough
+    (<i>Environmental Health Trust v. FCC</i>). All of that is true at once. Anybody who tells you it reduces to one clean sentence is
     selling something.
   </div>
 </section>
@@ -910,7 +953,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   <div class="myth">
     <div class="m">"The 20 cm warning in the manual proves the manufacturer knows the device is harmful up close."</div>
     <div class="r"><b>What the record supports:</b> 20 cm is where the FCC draws the line between a
-    mobile device and a portable device, in 47 CFR 2.1091 and 2.1093. At that distance or beyond, the
+    mobile device and a portable device (United States, <i>47 CFR</i> 2.1091, 2.1093). At that distance or beyond, the
     manufacturer is allowed to demonstrate compliance with a power density evaluation. Inside it, SAR
     testing in a phantom is required. So the statement in the manual is telling you which test method
     was used. Run it through Part 2 and a full power indoor AP at exactly 20 cm comes out around
@@ -921,9 +964,10 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     <div class="m">"Wi-Fi is safe. This has been settled for decades."</div>
     <div class="r"><b>What the record supports:</b> No adverse health effect has been established at
     compliant exposure levels, and that is the stated position of WHO, FDA, and Health Canada. But the
-    IARC 2B classification is still standing, some animal findings are still unexplained, the
-    occupational studies in Part 6 conflict with each other, and in 2021 the D.C. Circuit remanded the
-    FCC decision not to revisit its limits. "Nothing has been established" is accurate. "Settled" goes
+    IARC 2B classification is still standing (International Agency for Research on Cancer 419-20),
+    some animal findings are still unexplained, the occupational studies in Part 6 conflict with each
+    other, and in 2021 the D.C. Circuit remanded the FCC decision not to revisit its limits
+    (<i>Environmental Health Trust v. FCC</i>). "Nothing has been established" is accurate. "Settled" goes
     further than the record does.</div>
   </div>
 
@@ -932,8 +976,9 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     <div class="r"><b>What the record supports:</b> Higher frequencies penetrate <b>less</b>, not
     more. Absorption depth goes down as frequency goes up, which is why millimeter wave energy lands in
     skin and the outer few millimeters of tissue. That shallow deposition is the reason ICNIRP added
-    new surface limits above 6 GHz in 2020. Also, most deployed 5G in the United States is running in
-    sub 6 GHz spectrum, not millimeter wave.</div>
+    new surface limits above 6 GHz in 2020 (International Commission on Non-Ionizing Radiation
+    Protection 501-03). Also, most deployed 5G in the United States is running in sub 6 GHz spectrum,
+    not millimeter wave.</div>
   </div>
 
   <div class="myth">
@@ -952,7 +997,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     control, which drops handset output a long way when the signal is good. So a phone with a lower
     certified SAR used in a bad coverage area can deliver more exposure than a higher SAR phone sitting
     next to a strong cell. The FCC has said directly that SAR values should not be used to compare
-    device safety.</div>
+    device safety (United States, Federal Communications Commission, "Radio Frequency Safety").</div>
   </div>
 
   <div class="myth">
@@ -968,8 +1013,9 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
   <div class="myth">
     <div class="m">"You cannot measure any of this yourself."</div>
     <div class="r"><b>What the record supports:</b> You can. Broadband RF field probes and calibrated
-    spectrum analyzers with isotropic antennas do exactly this, and OET Bulletin 65 lays out the
-    measurement procedure. Consumer grade meters are uncalibrated and frequency selective in ways that
+    spectrum analyzers with isotropic antennas do exactly this, and the FCC bulletin lays out the
+    measurement procedure (United States, Federal Communications Commission, <i>OET Bulletin 65</i>
+    35-46). Consumer grade meters are uncalibrated and frequency selective in ways that
     do not help, so their absolute readings are not reliable. But the professional measurement path is
     documented and it is available to anybody who wants a real number.</div>
   </div>
@@ -982,43 +1028,101 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     band and configuration. For a mobile device you will find an MPE calculation and the separation
     distance it supports.</li>
     <li>Compare against the applicable limit: 1.6 W/kg over 1 g for SAR, or 1.0 mW/cm&sup2; general
-    population above 1500 MHz for MPE.</li>
+    population above 1500 MHz for MPE (United States, <i>47 CFR</i> 1.1310, 2.1093).</li>
     <li>For access points, also read the vendor hardware installation guide, which restates the
     separation distance in deployment terms.</li>
   </ol>
 
-  <h3>Primary sources</h3>
-  <ul>
-    <li>47 CFR 1.1307, 1.1310, 2.1091, 2.1093, 15.407 (US rules, MPE and SAR limits, 6 GHz power)</li>
-    <li>FCC OET Bulletin 65 and Supplement C (evaluating compliance with RF exposure limits)</li>
-    <li>FCC Equipment Authorization Search, per device exhibits</li>
-    <li>ICNIRP Guidelines for Limiting Exposure to Electromagnetic Fields, 100 kHz to 300 GHz, 2020</li>
-    <li>IEEE C95.1-2019, safety levels with respect to human exposure to electric, magnetic, and
-    electromagnetic fields, 0 Hz to 300 GHz</li>
-    <li>Health Canada Safety Code 6 (2015); ISED RSS-102</li>
-    <li>IEC 62209-1528 (SAR measurement), IEC 62232 (base station exposure assessment)</li>
-    <li>IARC Monographs Volume 102 (2013), non ionizing radiation, part 2: radiofrequency
-    electromagnetic fields</li>
-    <li>NTP Technical Reports 595 and 596 (2018), cell phone radiofrequency radiation studies</li>
-    <li>Falcioni et al., Ramazzini Institute, Environmental Research (2018)</li>
-    <li>Baste V, Riise T, Moen BE. Radiofrequency electromagnetic fields, male infertility and sex
-    ratio of offspring. Eur J Epidemiol. 2008;23(5):369-77. PMID 18415687</li>
-    <li>M&oslash;llerl&oslash;kken OJ, Moen BE. Is fertility reduced among men exposed to
-    radiofrequency fields in the Norwegian Navy? Bioelectromagnetics. 2008;29(5):345-52. PMID 18240289</li>
-    <li>Tong SH, Liu YT, Liu Y. Paternal exposure to occupational electromagnetic radiation and sex
-    ratio of the offspring: a meta-analysis. Zhonghua Nan Ke Xue. 2013;19(2):153-8. PMID 23441458</li>
-    <li>Yan SW et al. Long-term exposure to low intensity microwave radiation affects male
-    reproductivity. Zhonghua Nan Ke Xue. 2007;13(4):306-8. PMID 17491260</li>
-    <li>Cordelli E et al. Effects of RF-EMF exposure on pregnancy and birth outcomes: a systematic
-    review of experimental studies on non-human mammals. Environ Int. 2023;180:108178. PMID 37729852
-    (WHO commissioned; PROSPERO CRD42021227746)</li>
-    <li>Goldsmith JR. Epidemiologic evidence of radiofrequency radiation (microwave) effects on health
-    in military, broadcasting, and occupational studies. Int J Occup Environ Health. 1995;1(1):47-57.
-    PMID 9990158 (author-stated positive reporting bias)</li>
-    <li>WHO fact sheets on electromagnetic fields and public health</li>
-    <li>21 CFR 1030.10 (microwave oven leakage performance standard)</li>
-    <li>Environmental Health Trust v. FCC, D.C. Circuit, 2021</li>
-  </ul>
+  <h3 id="wc">Works Cited</h3>
+
+  <p>Entries follow MLA style, ninth edition. Government and organizational authors are given in full
+  so the in-text parentheticals above resolve without ambiguity. Journal articles are listed with their
+  PubMed identifiers so any reader can retrieve the original abstract directly. Where a summary in this
+  document was drawn from a published abstract rather than the full text, that is stated at the point
+  of use.</p>
+
+  <div class="wcited">
+    <p>Baste, Valborg, Trond Riise, and Bente E. Moen. "Radiofrequency Electromagnetic Fields; Male
+    Infertility and Sex Ratio of Offspring." <i>European Journal of Epidemiology</i>, vol. 23, no. 5,
+    2008, pp. 369-77. PubMed, PMID 18415687.</p>
+
+    <p>Canada. Health Canada. <i>Limits of Human Exposure to Radiofrequency Electromagnetic Energy in
+    the Frequency Range from 3 kHz to 300 GHz</i>. Safety Code 6, Health Canada, 2015.</p>
+
+    <p>Canada. Innovation, Science and Economic Development Canada. <i>Radio Frequency Exposure
+    Compliance of Radiocommunication Apparatus (All Frequency Bands)</i>. RSS-102, Issue 5, ISED,
+    2015.</p>
+
+    <p>Cordelli, Eugenia, et al. "Effects of Radiofrequency Electromagnetic Field (RF-EMF) Exposure on
+    Pregnancy and Birth Outcomes: A Systematic Review of Experimental Studies on Non-Human Mammals."
+    <i>Environment International</i>, vol. 180, 2023, article 108178. PubMed, PMID 37729852.</p>
+
+    <p><i>Environmental Health Trust v. Federal Communications Commission</i>. 9 F.4th 893, United
+    States Court of Appeals for the District of Columbia Circuit, 2021.</p>
+
+    <p>Falcioni, L., et al. "Report of Final Results Regarding Brain and Heart Tumors in Sprague-Dawley
+    Rats Exposed from Prenatal Life until Natural Death to Mobile Phone Radiofrequency Field
+    Representative of a 1.8 GHz GSM Base Station Environmental Emission." <i>Environmental Research</i>,
+    vol. 165, 2018, pp. 496-503.</p>
+
+    <p>Goldsmith, John R. "Epidemiologic Evidence of Radiofrequency Radiation (Microwave) Effects on
+    Health in Military, Broadcasting, and Occupational Studies." <i>International Journal of
+    Occupational and Environmental Health</i>, vol. 1, no. 1, 1995, pp. 47-57. PubMed, PMID 9990158.
+    Author states the review carries a positive reporting bias and did not systematically include
+    negative studies.</p>
+
+    <p>Institute of Electrical and Electronics Engineers. <i>IEEE Standard for Safety Levels with
+    Respect to Human Exposure to Electric, Magnetic, and Electromagnetic Fields, 0 Hz to 300 GHz</i>.
+    IEEE Std C95.1-2019, IEEE, 2019.</p>
+
+    <p>International Agency for Research on Cancer. <i>Non-Ionizing Radiation, Part 2: Radiofrequency
+    Electromagnetic Fields</i>. IARC Monographs on the Evaluation of Carcinogenic Risks to Humans,
+    vol. 102, World Health Organization, 2013.</p>
+
+    <p>International Commission on Non-Ionizing Radiation Protection. "Guidelines for Limiting Exposure
+    to Electromagnetic Fields (100 kHz to 300 GHz)." <i>Health Physics</i>, vol. 118, no. 5, 2020,
+    pp. 483-524.</p>
+
+    <p>International Electrotechnical Commission. <i>Measurement Procedure for the Assessment of
+    Specific Absorption Rate of Human Exposure to Radio Frequency Fields from Hand-Held and Body-Worn
+    Wireless Communication Devices</i>. IEC/IEEE 62209-1528, IEC, 2020.</p>
+
+    <p>M&oslash;llerl&oslash;kken, Ole Jacob, and Bente E. Moen. "Is Fertility Reduced among Men
+    Exposed to Radiofrequency Fields in the Norwegian Navy?" <i>Bioelectromagnetics</i>, vol. 29,
+    no. 5, 2008, pp. 345-52. PubMed, PMID 18240289.</p>
+
+    <p>Tong, Shu-Hui, Yan-Ting Liu, and Yi Liu. "Paternal Exposure to Occupational Electromagnetic
+    Radiation and Sex Ratio of the Offspring: A Meta-Analysis." <i>National Journal of Andrology</i>,
+    vol. 19, no. 2, 2013, pp. 153-58. PubMed, PMID 23441458.</p>
+
+    <p>United States. <i>Code of Federal Regulations</i>. Title 21, section 1030.10, Microwave Ovens.
+    Office of the Federal Register.</p>
+
+    <p>United States. <i>Code of Federal Regulations</i>. Title 47, sections 1.1307, 1.1310, 2.1091,
+    2.1093, and 15.407. Office of the Federal Register.</p>
+
+    <p>United States. Federal Communications Commission. <i>Evaluating Compliance with FCC Guidelines
+    for Human Exposure to Radiofrequency Electromagnetic Fields</i>. OET Bulletin 65, Edition 97-01,
+    FCC Office of Engineering and Technology, 1997.</p>
+
+    <p>United States. Federal Communications Commission. "Equipment Authorization Search."
+    <i>FCC.gov</i>, www.fcc.gov/oet/ea/fccid.</p>
+
+    <p>United States. Federal Communications Commission. "Radio Frequency Safety." <i>FCC.gov</i>,
+    www.fcc.gov/general/radio-frequency-safety-0.</p>
+
+    <p>United States. National Toxicology Program. <i>Toxicology and Carcinogenesis Studies in
+    Hsd:Sprague Dawley SD Rats Exposed to Whole-Body Radio Frequency Radiation at a Frequency
+    (900 MHz) and Modulations (GSM and CDMA) Used by Cell Phones</i>. NTP Technical Report 595,
+    National Institutes of Health, 2018.</p>
+
+    <p>World Health Organization. "Electromagnetic Fields and Public Health: Mobile Phones."
+    <i>WHO.int</i>, World Health Organization.</p>
+
+    <p>Yan, Shu-Wen, et al. "Long-Term Exposure to Low Intensity Microwave Radiation Affects Male
+    Reproductivity." <i>National Journal of Andrology</i>, vol. 13, no. 4, 2007, pp. 306-08. PubMed,
+    PMID 17491260.</p>
+  </div>
 
   <div class="card" style="border-top:4px solid var(--violet)">
     <h4>Scope and limitations of this document</h4>
@@ -1030,7 +1134,10 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
     ceilings, not per model certified results, and per model numbers have to come from the FCC ID
     exhibit or the vendor regulatory guide. Agency positions are summarized using the terms those
     agencies used, and anybody quoting them should go read the original first. The personal account in
-    Part 1 is a personal account and is labeled that way on purpose.</p>
+    Part 1 is a personal account and is labeled that way on purpose. Every technical limit, procedure,
+    formula, and study result in this document is attributed to its source in the Works Cited above.
+    Anything uncited is my own arrangement, worked example, deployment experience, or opinion, and
+    should be weighed accordingly.</p>
   </div>
 </section>
 
@@ -1047,7 +1154,7 @@ Percent of limit = 100 &times; S / S<sub>limit</sub>
 <script>
 /* ---------------- nav ---------------- */
 var PARTS=[["s1","1. Summary"],["s2","2. Physics"],["s3","3. Regulators"],
-["s4","4. Devices"],["s5","5. AP Engineering"],["s6","6. Science"],["s7","7. Perspective"]];
+["s4","4. Devices"],["s5","5. AP Engineering"],["s6","6. Science"],["s7","7. Perspective + Works Cited"]];
 var nav=document.getElementById('nav');
 PARTS.forEach(function(p,i){
   var b=document.createElement('button'); b.textContent=p[1]; b.dataset.t=p[0];
